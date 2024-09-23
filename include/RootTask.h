@@ -18,5 +18,6 @@ private:
     rio::Shader mShader;
     double mCounter = 0.0;
 
+
     rio::Matrix44f mProjMtx;
 };
