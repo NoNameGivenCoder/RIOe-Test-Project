@@ -6,6 +6,11 @@
 #include <gpu/rio_VertexArray.h>
 #include <gfx/mdl/res/rio_MeshData.h>
 
+#include "gpu/rio_Texture.h"
+#include "gpu/rio_TextureSampler.h"
+
+#include "rio-e/Types/Material.h"
+
 namespace rioe
 {
 	class Mesh
@@ -14,8 +19,10 @@ namespace rioe
 		Mesh(std::vector<rio::mdl::res::Vertex> vertices, std::vector<unsigned int> indicies);
 
 		void Draw() const;
+		Material* GetMaterial() { return mMaterial.get(); };
 
 	private:
+		friend class ModelLoader;
 		std::vector<rio::mdl::res::Vertex> vertices;
 		std::vector<unsigned int> indicies;
 
@@ -27,5 +34,7 @@ namespace rioe
 
 		const unsigned int* mIdxBuf;
 		size_t mIdxNum;
+
+		std::unique_ptr<Material> mMaterial;
 	};
 }

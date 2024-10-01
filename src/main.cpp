@@ -4,6 +4,7 @@
 
 #include "rio-e/PropertyCreatorMgr.h"
 #include "rio-e/SceneMgr.h"
+#include "rio-e/ModelLoader.h"
 
 static const rio::InitializeArg cInitializeArg = {
     .window = {
@@ -26,6 +27,7 @@ int main()
     // Main loop
     rio::EnterMainLoop();
 
+    rioe::ModelLoader::Cleanup();
     // Exit RIO
     rio::Exit();
 

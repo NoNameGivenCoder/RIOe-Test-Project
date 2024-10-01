@@ -22,10 +22,12 @@ layout(location = 2) in vec2 aTexCoord;   // Vertex texture coordinates (locatio
 // Output variables to pass to the fragment shader
 out vec3 FragPos;         // Position of the fragment in world space
 out vec3 Normal;          // Normal in world space
-out vec3 GradientColor;    // Color for the gradient based on position
+out vec2 TexCoord;    // Color for the gradient based on position
 
 void main()
 {
+    TexCoord = aTexCoord;
+
     vec4 normal = vec4(aNormal, 0.0);
 
     Normal = normalize(vec3(

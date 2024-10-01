@@ -3,6 +3,8 @@
 #include "gpu/rio_Shader.h"
 #include "math/rio_Matrix.h"
 #include "gpu/rio_UniformBlock.h"
+#include "gpu/rio_TextureSampler.h"
+#include "rio-e/Types/Model.h"
 
 class RootTask : public rio::ITask
 {
@@ -15,12 +17,13 @@ private:
     void exit_() override;
 
 private:
-    rioe::Mesh* mMesh;
+    rioe::Model* mModel;
     rio::Shader mShader;
     double mCounter = 0.0;
 
     rio::UniformBlock* mViewUniformBlock;
     rio::UniformBlock* mModelUniformBlock;
+
     rio::Matrix44f mProjMtx;
 
     struct ModelBlock

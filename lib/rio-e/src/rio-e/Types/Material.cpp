@@ -7,9 +7,7 @@ namespace rioe
 		mRenderState.apply();
 		mShader->bind();
 
-		//for (const auto& texture : mTextures)
-		//{
-		//	texture.
-		//}
+		if (mTextureSampler->isBindable() && mTextureSampler->isTextureAvailable() && mTextureLocation != 0xFFFFFFFF)
+			mTextureSampler->bindFS(mTextureLocation, 0);
 	}
 }

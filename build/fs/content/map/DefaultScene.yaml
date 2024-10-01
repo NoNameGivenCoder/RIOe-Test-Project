@@ -1,11 +1,11 @@
 sceneName: DefaultScene
 camera:
     near: 0.1
-    far: 100.0
-    fov: 120.0
+    far: 1000.0
+    fov: 90.0
     at:
         x: 0
-        y: 0
+        y: 5
         z: 0
     pos:
         x: 10

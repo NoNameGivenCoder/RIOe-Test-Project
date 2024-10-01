@@ -86,10 +86,10 @@ void CafeRemoteController::calcImpl_()
                 mPadHold.change(1 << Controller::PAD_IDX_UP,     hold & WPAD_BUTTON_UP);
                 mPadHold.change(1 << Controller::PAD_IDX_DOWN,   hold & WPAD_BUTTON_DOWN);
 
-                if (status.extensionType == WPAD_EXT_NUNCHUK || status.extensionType == WPAD_EXT_MPLUS_NUNCHUK)
-                    mLeftStick.set(status.nunchuck.stick.x, status.nunchuck.stick.y);
-                else
-                    mLeftStick.set(0.0f, 0.0f);
+                //if (status.extensionType == WPAD_EXT_NUNCHUK || status.extensionType == WPAD_EXT_MPLUS_NUNCHUK)
+                    //mLeftStick.set(status.nunchuck.stick.x, status.nunchuck.stick.y);
+               // else
+                //    mLeftStick.set(0.0f, 0.0f);
 
                 mRightStick.set(0.0f, 0.0f);
 

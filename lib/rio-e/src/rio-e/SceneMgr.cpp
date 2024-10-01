@@ -43,6 +43,8 @@ namespace rioe
 
         YAML::Node YAMLNodes = YAML::Load(std::string(reinterpret_cast<char*>(filebuffer), load.read_size));
 
+        delete filebuffer;
+
         mCurrentScene.mNodes.clear();
         mCurrentScene.sceneName = YAMLNodes["sceneName"].as<std::string>();
 
@@ -52,7 +54,7 @@ namespace rioe
         mCurrentScene.mCamera.pos() = { YAMLNodes["camera"]["pos"]["x"].as<f32>(), YAMLNodes["camera"]["pos"]["y"].as<f32>(), YAMLNodes["camera"]["pos"]["z"].as<f32>() };
         mCurrentScene.mCamera.at() = { YAMLNodes["camera"]["at"]["x"].as<f32>(), YAMLNodes["camera"]["at"]["y"].as<f32>(), YAMLNodes["camera"]["at"]["z"].as<f32>() };
 
-        mCurrentScene.mProjection.set(YAMLNodes["camera"]["near"].as<f32>(), YAMLNodes["camera"]["far"].as<f32>(), rio::Mathf::deg2rad(YAMLNodes["camera"]["fov"].as<f32>()), 1280 / 720);
+        mCurrentScene.mProjection.set(YAMLNodes["camera"]["near"].as<f32>(), YAMLNodes["camera"]["far"].as<f32>(), rio::Mathf::deg2rad(YAMLNodes["camera"]["fov"].as<f32>()), static_cast<f32>(1280) / 720);
 
         rio::PrimitiveRenderer::instance()->setProjection(mCurrentScene.mProjection); 
 
@@ -85,7 +87,5 @@ namespace rioe
 
             RIO_LOG("[SceneMgr] Created new node %d.\n", createdNode->ID);
         }
-
-        rio::MemUtil::free(filebuffer);
     }
 }

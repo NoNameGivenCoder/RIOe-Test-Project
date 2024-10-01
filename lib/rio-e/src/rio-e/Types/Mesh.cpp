@@ -9,8 +9,6 @@ namespace rioe
 		this->vertices = vertices;
 		this->indicies = indicies;
 
-		RIO_LOG("vert %d\n", vertices.size());
-
 		mIdxBuf = this->indicies.data();  // Now safe to access
 		mIdxNum = this->indicies.size();
 
@@ -29,13 +27,10 @@ namespace rioe
 		mVAO.addAttribute(mNormalStream, mVBO);
 		mVAO.addAttribute(mTexCoordStream, mVBO);
 		mVAO.process();
-
-		RIO_LOG("%d during construct\n", mIdxNum);
 	}
 
 	void Mesh::Draw() const
 	{
-		//RIO_LOG("%d during draw\n", mIdxNum);
 		mVAO.bind();
 		rio::Drawer::DrawElements(rio::Drawer::TRIANGLES, mIdxNum, mIdxBuf);
 	}
