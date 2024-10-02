@@ -53,10 +53,9 @@ namespace rioe {
 			
 					mesh->Draw();
 
-					rio::RenderState renderState;
-					renderState.apply();
+					 //rio::RenderState renderState;
+					//renderState.apply();
 				}
-				
 			}
 
 			void Load(YAML::Node node) override {};

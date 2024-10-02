@@ -5,7 +5,7 @@ camera:
     fov: 90.0
     at:
         x: 0
-        y: 5
+        y: 0
         z: 0
     pos:
         x: 10
@@ -23,10 +23,10 @@ nodes:
         transform:
             position:
                 x: 0
-                y: 10
+                y: 0
                 z: 0
             rotation:
-                x: 0
+                x: -30
                 y: 0
                 z: 0
             scale:
@@ -41,8 +41,8 @@ nodes:
         name: obj_emerald
         transform:
             position:
-                x: 2
-                y: 5
+                x: 10
+                y: 0
                 z: 0
             rotation:
                 x: -30

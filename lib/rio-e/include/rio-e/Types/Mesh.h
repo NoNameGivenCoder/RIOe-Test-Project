@@ -19,7 +19,7 @@ namespace rioe
 		Mesh(std::vector<rio::mdl::res::Vertex> vertices, std::vector<unsigned int> indicies);
 
 		void Draw() const;
-		Material* GetMaterial() { return mMaterial.get(); };
+		Material* GetMaterial() { return mMaterial; };
 
 	private:
 		friend class ModelLoader;
@@ -35,6 +35,6 @@ namespace rioe
 		const unsigned int* mIdxBuf;
 		size_t mIdxNum;
 
-		std::unique_ptr<Material> mMaterial;
+		Material* mMaterial;
 	};
 }

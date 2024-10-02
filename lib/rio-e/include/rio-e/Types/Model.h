@@ -9,8 +9,8 @@
 
 namespace rioe
 {
-	class Model
-	{
+    class Model
+    {
     public:
         std::vector<Mesh*>& GetMeshes() {
             return mMeshes;
@@ -27,15 +27,10 @@ namespace rioe
             rio::Vector3f  view_pos;       u32 _padding;
             rio::Matrix44f view_proj_mtx;
         };
-	private:
-		rio::UniformBlock* mViewUniformBlock;
-		rio::UniformBlock* mModelUniformBlock;
-
-        ModelBlock mModelBlock;
-        ViewBlock mViewBlock;
-
-        std::vector<Mesh*> mMeshes;
+    private:
+        std::vector<Mesh*> mMeshes; // Smart pointers for safe memory management
 
         friend class ModelLoader;
-	};
+    };
+
 }
