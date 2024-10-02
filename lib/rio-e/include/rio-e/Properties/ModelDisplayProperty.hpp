@@ -107,9 +107,9 @@ namespace rioe {
 
 					mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->load("gltf_test");
 
-					mModelMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getFragmentUniformLocation("model");
-					mNormalMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getFragmentUniformLocation("normalMtx");
-					mViewProjectionLocation[i] = mesh->GetMaterial()->GetShader()->getFragmentUniformLocation("viewProj");
+					mModelMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("model");
+					mNormalMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("normalMtx");
+					mViewProjectionLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("viewProj");
 
 					mesh->GetMaterial()->SetTextureLocation(mesh->GetMaterial()->GetShader()->getFragmentSamplerLocation("texture0"));
 				}
