@@ -37,3 +37,22 @@ nodes:
             MeshProperty:
                 meshFileName: test
                 meshKey: emerald
+    7:
+        name: obj_emerald
+        transform:
+            position:
+                x: 2
+                y: 5
+                z: 0
+            rotation:
+                x: -30
+                y: 0
+                z: 0
+            scale:
+                x: 0.1
+                y: 0.1
+                z: 0.1
+        properties:
+            MeshProperty:
+                meshFileName: test
+                meshKey: emerald

@@ -14,7 +14,7 @@ namespace rioe
 		return true;
 	}
 
-	bool PropertyCreatorMgr::destorySingleton()
+	bool PropertyCreatorMgr::destroySingleton()
 	{
 		if (!mInstance)
 			return false;

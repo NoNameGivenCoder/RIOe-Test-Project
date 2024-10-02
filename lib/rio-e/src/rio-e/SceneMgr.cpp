@@ -21,7 +21,7 @@ namespace rioe
         return true;
     }
 
-    bool SceneMgr::destorySingleton()
+    bool SceneMgr::destroySingleton()
     {
         if (!mInstance)
             return false;
@@ -37,13 +37,13 @@ namespace rioe
         RIO_LOG("[SceneMgr] Loading from %s..\n", pLoadArg.path.string().c_str());
 
         rio::FileDevice::LoadArg load;
-        load.path = pLoadArg.path.string();
+        load.path = "map/" + pLoadArg.path.string();
 
-        u8* filebuffer = rio::FileDeviceMgr::instance()->getNativeFileDevice()->load(load);
+        u8* fileBuffer = rio::FileDeviceMgr::instance()->tryLoad(load);
 
-        YAML::Node YAMLNodes = YAML::Load(std::string(reinterpret_cast<char*>(filebuffer), load.read_size));
+        YAML::Node YAMLNodes = YAML::Load(std::string(reinterpret_cast<char*>(fileBuffer), load.read_size));
 
-        delete filebuffer;
+        delete fileBuffer;
 
         mCurrentScene.mNodes.clear();
         mCurrentScene.sceneName = YAMLNodes["sceneName"].as<std::string>();

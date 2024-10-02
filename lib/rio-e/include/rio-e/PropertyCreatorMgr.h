@@ -18,7 +18,7 @@ namespace rioe
         using CreatorFunc = std::function<std::unique_ptr<Property>()>;
 
         static bool createSingleton();
-        static bool destorySingleton();
+        static bool destroySingleton();
 
         static inline PropertyCreatorMgr* instance() { return mInstance; };
 

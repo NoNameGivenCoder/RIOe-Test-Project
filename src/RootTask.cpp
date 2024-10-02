@@ -19,18 +19,18 @@ RootTask::RootTask()
 }
 
 void RootTask::prepare_()
-{
-    mModel = rioe::ModelLoader::LoadModel("Bomb2.glb");
-    
+{   
     rioe::PropertyCreatorMgr::instance()->RegisterProperty("MeshProperty", []() -> std::unique_ptr<rioe::Property> {
         return std::make_unique<rioe::properties::ModelDisplayProperty>();
     });
 
-    rioe::SceneMgr::instance()->Load({ "./fs/content/map/DefaultScene.yaml", true });
+    rioe::SceneMgr::instance()->Load({ "DefaultScene.yaml", true });
 
     auto modelProperty = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(5)->GetProperty<rioe::properties::ModelDisplayProperty>();
+    auto modelProperty2 = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(7)->GetProperty<rioe::properties::ModelDisplayProperty>();
 
-    modelProperty[0]->SetDisplayModel(mModel);
+    modelProperty2[0]->SetDisplayModel(rioe::ModelLoader::LoadModel("Bomb2.glb"));
+    modelProperty[0]->SetDisplayModel(rioe::ModelLoader::LoadModel("Bomb2.glb"));
 }
 
 void RootTask::calc_()
@@ -43,10 +43,13 @@ void RootTask::calc_()
 		15,
 		std::cos(mCounter) * 10
 	);
-	mCounter += 0.8f / 60;
+	mCounter += 2.f / 60;
 
     auto modelProperty = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(5)->GetProperty<rioe::properties::ModelDisplayProperty>();
+    auto modelProperty2 = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(7)->GetProperty<rioe::properties::ModelDisplayProperty>();
+
     modelProperty[0]->Update();
+    modelProperty2[0]->Update();
 }
 
 void RootTask::exit_()

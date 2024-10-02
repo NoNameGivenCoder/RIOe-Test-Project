@@ -31,8 +31,7 @@ namespace rioe {
 					mesh->GetMaterial()->Bind();
 
 					{
-						rio::Matrix34f worldMtx; // Assume this is a 4x4 matrix
-						worldMtx.makeSRT({ 0.1, 0.1, 0.1 }, { -30, 0, 0 }, { 0, 5, 0 });
+						rio::Matrix34f worldMtx = GetParentNode().lock()->GetTransformationMatrix();
 					
 						rio::Matrix34f normalMtx;
 					
@@ -43,8 +42,6 @@ namespace rioe {
 					}
 					
 					{
-						rio::MemUtil::copy(&mProjMtx, &rioe::SceneMgr::instance()->GetCurrentScene()->GetPerspectiveProjection()->getMatrix(), sizeof(rio::Matrix44f));
-					
 						rio::Matrix44f view_proj_mtx;
 						rio::BaseMtx34f viewMtx;
 						rioe::SceneMgr::instance()->GetCurrentScene()->GetCamera()->getMatrix(&viewMtx);
@@ -55,6 +52,9 @@ namespace rioe {
 					}
 			
 					mesh->Draw();
+
+					rio::RenderState renderState;
+					renderState.apply();
 				}
 				
 			}
@@ -90,6 +90,8 @@ namespace rioe {
 
 			void InitializeModel()
 			{
+				rio::MemUtil::copy(&mProjMtx, &rioe::SceneMgr::instance()->GetCurrentScene()->GetPerspectiveProjection()->getMatrix(), sizeof(rio::Matrix44f));
+
 				mMeshCount = mDisplayModel->GetMeshes().size();
 
 				mModelMatrixLocation = new u32[mMeshCount];
@@ -103,7 +105,7 @@ namespace rioe {
 					if (mesh->GetMaterial()->GetShader()->isLoaded())
 						mesh->GetMaterial()->GetShader()->unload();
 
-					mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->load("gltf_test", rio::Shader::MODE_UNIFORM_REGISTER);
+					mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->load("gltf_test");
 
 					mModelMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getFragmentUniformLocation("model");
 					mNormalMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getFragmentUniformLocation("normalMtx");

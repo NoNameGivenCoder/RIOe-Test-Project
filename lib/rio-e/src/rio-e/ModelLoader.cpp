@@ -43,6 +43,7 @@ namespace rioe
 
 	void ModelLoader::Cleanup()
 	{
+		size_t modelsSize = mModelCache.size();
 		for (auto& model : mModelCache)
 		{
 			for (Mesh* mesh : model.second->mMeshes)
@@ -50,16 +51,16 @@ namespace rioe
 				delete mesh;
 			}
 
-			size_t meshes_size = model.second->mMeshes.size();
+			size_t meshesSize = model.second->mMeshes.size();
 
 			delete model.second;
 
-			RIO_LOG("[ModelLoader] Cleaned %d meshes from %s.\n", meshes_size, model.first.c_str());
+			RIO_LOG("[ModelLoader] Cleaned %d meshes from %s.\n", meshesSize, model.first.c_str());
 		}
 
 		mModelCache.clear();
 		
-		RIO_LOG("[ModelLoader] Models cleaned\n");
+		RIO_LOG("[ModelLoader] %d Model(s) cleaned.\n", modelsSize);
 	}
 
 	Model* ModelLoader::LoadModel(std::string filename)
@@ -194,8 +195,8 @@ namespace rioe
 
 					mesh->mMaterial->mTextureSampler->linkTexture2D(mesh->mMaterial->mTexture.get());
 
-					//if (material.doubleSided)
-						//mesh->mMaterial->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_NONE);
+					if (material.doubleSided)
+						mesh->mMaterial->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_NONE);
 				}
 
 				//tinyMesh.

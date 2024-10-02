@@ -33,8 +33,8 @@ int main()
     // Main loop
     rio::EnterMainLoop();
 
-    rioe::SceneMgr::destorySingleton();
-    rioe::PropertyCreatorMgr::destorySingleton();
+    rioe::SceneMgr::destroySingleton();
+    rioe::PropertyCreatorMgr::destroySingleton();
     rioe::ModelLoader::Cleanup();
     // Exit RIO
     rio::Exit();

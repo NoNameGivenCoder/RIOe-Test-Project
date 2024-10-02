@@ -28,7 +28,7 @@ namespace rioe
         };
     public:
         static bool createSingleton();
-        static bool destorySingleton();
+        static bool destroySingleton();
 
         static inline SceneMgr* instance() { return mInstance; };
 
