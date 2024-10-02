@@ -6,6 +6,10 @@
 #include "rio-e/SceneMgr.h"
 #include "rio-e/ModelLoader.h"
 
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
+
 static const rio::InitializeArg cInitializeArg = {
     .window = {
 #if RIO_IS_WIN
@@ -17,6 +21,8 @@ static const rio::InitializeArg cInitializeArg = {
 
 int main()
 {
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
     rioe::SceneMgr::createSingleton();
     rioe::PropertyCreatorMgr::createSingleton();
 
@@ -27,12 +33,11 @@ int main()
     // Main loop
     rio::EnterMainLoop();
 
+    rioe::SceneMgr::destorySingleton();
+    rioe::PropertyCreatorMgr::destorySingleton();
     rioe::ModelLoader::Cleanup();
     // Exit RIO
     rio::Exit();
-
-    rioe::SceneMgr::destorySingleton();
-    rioe::PropertyCreatorMgr::destorySingleton();
 
     return 0;
 }

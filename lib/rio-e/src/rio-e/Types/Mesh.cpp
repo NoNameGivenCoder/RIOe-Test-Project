@@ -12,7 +12,7 @@ namespace rioe
 		mIdxBuf = this->indicies.data();  // Now safe to access
 		mIdxNum = this->indicies.size();
 
-		rio::VertexBuffer::invalidateCache(mIdxBuf, mIdxNum);
+		rio::VertexBuffer::invalidateCache(mIdxBuf, mIdxNum * sizeof(unsigned int));
 
 		mVBO.setStride(sizeof(rio::mdl::res::Vertex));
 		mVBO.setDataInvalidate(vertices.data(), vertices.size() * sizeof(rio::mdl::res::Vertex));

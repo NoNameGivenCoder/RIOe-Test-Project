@@ -65,9 +65,10 @@ namespace rioe
             YAML::Node node = it->second;
 
             auto createdNode = std::make_shared<Node>();
-            //createdNode->SetPosition({ node["transform"]["position"]["x"].as<f32>(), node["transform"]["position"]["y"].as<f32>(), node["transform"]["position"]["z"].as<f32>() });
-            //createdNode->SetRotation({ node["transform"]["rotation"]["x"].as<f32>(), node["transform"]["rotation"]["y"].as<f32>(), node["transform"]["rotation"]["z"].as<f32>() });
-            //createdNode->SetScale({ node["transform"]["scale"]["x"].as<f32>(), node["transform"]["scale"]["y"].as<f32>(), node["transform"]["scale"]["z"].as<f32>() });
+            createdNode->SetPosition({ node["transform"]["position"]["x"].as<f32>(), node["transform"]["position"]["y"].as<f32>(), node["transform"]["position"]["z"].as<f32>() });
+            createdNode->SetRotation({ node["transform"]["rotation"]["x"].as<f32>(), node["transform"]["rotation"]["y"].as<f32>(), node["transform"]["rotation"]["z"].as<f32>() });
+            createdNode->SetScale({ node["transform"]["scale"]["x"].as<f32>(), node["transform"]["scale"]["y"].as<f32>(), node["transform"]["scale"]["z"].as<f32>() });
+
             createdNode->ID = id;
             createdNode->name = node["name"].as<std::string>();
 

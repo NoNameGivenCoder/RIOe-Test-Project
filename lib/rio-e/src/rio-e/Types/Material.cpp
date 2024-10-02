@@ -8,6 +8,6 @@ namespace rioe
 		mShader->bind();
 
 		if (mTextureSampler->isBindable() && mTextureSampler->isTextureAvailable() && mTextureLocation != 0xFFFFFFFF)
-			mTextureSampler->bindFS(mTextureLocation, 0);
+			mTextureSampler->tryBindFS(mTextureLocation, 0);
 	}
 }

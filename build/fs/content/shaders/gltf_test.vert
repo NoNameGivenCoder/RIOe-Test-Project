@@ -1,18 +1,8 @@
 #version 330 core
 
-layout(std140)
-uniform cViewBlock
-{
-    vec3 viewPos;
-    vec4 viewProj[4];
-};
-
-layout(std140)
-uniform cModelBlock
-{
-    vec4 model[3];
-    vec4 normalMtx[3];
-};
+uniform vec4 model[3];
+uniform vec4 normalMtx[3];
+uniform vec4 viewProj[4];
 
 // Input attributes from the vertex buffer
 layout(location = 0) in vec3 aPos;        // Vertex position (location = 0)

@@ -22,6 +22,7 @@ namespace rioe
     public:
         inline std::weak_ptr<Node> GetParentNode() const { return parentNode; };
     private:
+        friend class Node;
         std::weak_ptr<Node> parentNode;
     };
 }

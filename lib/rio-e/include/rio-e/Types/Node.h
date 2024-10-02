@@ -22,6 +22,7 @@ namespace rioe
         inline rio::Vector3f GetScale() const { return mScale; };
         inline rio::Vector3f GetPosition() const { return mPosition; };
         inline rio::Vector3f GetRotation() const { return mRotation; };
+        inline rio::Matrix34f GetTransformationMatrix() { return mTransformMatrix; };
 
         inline std::shared_ptr<Node> GetParent() const { return mParent.lock(); };
 
@@ -70,8 +71,25 @@ namespace rioe
 
         inline void AddProperty(std::shared_ptr<Property> property)
         {
-            property->Start();
+            property->parentNode = shared_from_this();
             mProperties.push_back(property);
+            property->Start();
+        }
+        
+        template <typename T>
+        std::vector<T*> GetProperty()
+        {
+            std::vector<T*> result;
+
+            for (const auto& property : mProperties)
+            {
+                if (T* propertyFound = dynamic_cast<T*>(property.get()))
+                {
+                    result.push_back(propertyFound);
+                }
+            }
+
+            return result;
         }
 
     private:

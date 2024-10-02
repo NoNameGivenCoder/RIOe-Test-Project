@@ -15,9 +15,6 @@ namespace rioe
         std::vector<Mesh*>& GetMeshes() {
             return mMeshes;
         };
-	private:
-		rio::UniformBlock* mViewUniformBlock;
-		rio::UniformBlock* mModelUniformBlock;
 
         struct ModelBlock
         {
@@ -25,12 +22,14 @@ namespace rioe
             rio::Matrix34f normal_mtx;
             rio::BaseVec4u _padding[10];
         };
-
         struct ViewBlock
         {
             rio::Vector3f  view_pos;       u32 _padding;
             rio::Matrix44f view_proj_mtx;
         };
+	private:
+		rio::UniformBlock* mViewUniformBlock;
+		rio::UniformBlock* mModelUniformBlock;
 
         ModelBlock mModelBlock;
         ViewBlock mViewBlock;

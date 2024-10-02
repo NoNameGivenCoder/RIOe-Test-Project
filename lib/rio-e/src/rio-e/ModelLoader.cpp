@@ -78,7 +78,7 @@ namespace rioe
 		loader.SetImageLoader(CustomLoadImageData, nullptr);
 		bool ret = loader.LoadBinaryFromMemory(&model, &err, &warn, fileBuffer, load.read_size);
 
-		delete fileBuffer;
+		rio::MemUtil::free(fileBuffer);
 
 		if (!ret)
 		{
@@ -87,9 +87,9 @@ namespace rioe
 
 		bool bigEndian = isBigEndian();
 
-		for (const auto& mesh : model.meshes)
+		for (const auto& tinyMesh : model.meshes)
 		{
-			for (const auto& primitive : mesh.primitives)
+			for (const auto& primitive : tinyMesh.primitives)
 			{
 				std::vector<unsigned int> indexData;
 				std::vector<rio::mdl::res::Vertex> vertices;
@@ -194,11 +194,11 @@ namespace rioe
 
 					mesh->mMaterial->mTextureSampler->linkTexture2D(mesh->mMaterial->mTexture.get());
 
-					if (material.doubleSided)
-						mesh->mMaterial->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_NONE);
-
-					mesh->mMaterial->mRenderState.setPolygonMode(rio::Graphics::POLYGON_MODE_FILL);
+					//if (material.doubleSided)
+						//mesh->mMaterial->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_NONE);
 				}
+
+				//tinyMesh.
 
 				newModel->mMeshes.emplace_back(mesh);
 			}
