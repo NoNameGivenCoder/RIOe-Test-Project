@@ -27,7 +27,7 @@ namespace rioe {
 			{
 				for (int i = 0; i < mMeshCount; i++)
 				{
-					auto& mesh = mDisplayModel->GetMeshes()[i];
+					auto mesh = mDisplayModel->GetMeshes()[i];
 					mesh->GetMaterial()->Bind();
 
 					{

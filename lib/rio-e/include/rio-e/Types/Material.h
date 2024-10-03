@@ -16,13 +16,13 @@ namespace rioe
 	class Material
 	{
 	public:
-		Material() : mTexture(nullptr), mTextureSampler(nullptr), mShader(nullptr), mTextureLocation(0) {};
+		Material() : mTexture(nullptr), mTextureLocation(0) {};
 		~Material() {  }
 		void Bind() const;
 
-		rio::Shader* GetShader() const { return mShader.get(); };
-		rio::Texture2D* GetTexture() const { return mTexture.get(); };
-		rio::TextureSampler2D* GetSamplerTexture() const { return mTextureSampler.get(); };
+		rio::Shader* GetShader() { return &mShader; };
+		rio::Texture2D* GetTexture() const { return mTexture; };
+		rio::TextureSampler2D* GetSamplerTexture() { return &mTextureSampler; };
 		void SetTextureLocation(u32 pLoc) { mTextureLocation = pLoc; };
 
 		const std::string& GetName() const { return mName; };
@@ -43,9 +43,9 @@ namespace rioe
 		friend class ModelLoader;
 		std::string mName;
 
-		std::shared_ptr<rio::Texture2D> mTexture;
-		std::shared_ptr<rio::TextureSampler2D> mTextureSampler;
-		std::shared_ptr<rio::Shader> mShader;
+		rio::Texture2D* mTexture;
+		rio::TextureSampler2D mTextureSampler;
+		rio::Shader mShader;
 
 		rio::RenderState mRenderState;
 

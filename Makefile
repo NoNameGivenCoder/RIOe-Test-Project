@@ -60,7 +60,7 @@ INCLUDES	:=	lib/rio/include \
 			lib/rio-e/include \
 			lib/yaml-cpp/include \
 			lib/tinygltf \
-CONTENT		:=	fs/content
+CONTENT		:=	build/fs/content
 ICON		:=
 TV_SPLASH	:=
 DRC_SPLASH	:=
@@ -73,7 +73,7 @@ CFLAGS	:=	-Wall -Wmissing-include-dirs -Wundef -Wredundant-decls -Wcast-align \
 			-ffunction-sections -fdata-sections \
 			$(MACHDEP)
 
-CFLAGS	+=	$(INCLUDE) -D__WIIU__ -D__WUT__ \
+CFLAGS	+=	$(INCLUDE) -D__WIIU__ -D__WUT__ -D__powerpc__ \
 			-DRIO_DEBUG \
 			-DRIO_CAFE_MAIN_FILE_DEVICE_AS_CONTENT
 

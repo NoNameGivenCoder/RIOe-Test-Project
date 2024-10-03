@@ -5,9 +5,9 @@ namespace rioe
 	void Material::Bind() const
 	{
 		mRenderState.apply();
-		mShader->bind();
+		mShader.bind();
 
-		if (mTextureSampler->isBindable() && mTextureSampler->isTextureAvailable() && mTextureLocation != 0xFFFFFFFF)
-			mTextureSampler->tryBindFS(mTextureLocation, 0);
+		if (mTextureSampler.isBindable() && mTextureSampler.isTextureAvailable() && mTextureLocation != 0xFFFFFFFF)
+			mTextureSampler.tryBindFS(mTextureLocation, 0);
 	}
 }

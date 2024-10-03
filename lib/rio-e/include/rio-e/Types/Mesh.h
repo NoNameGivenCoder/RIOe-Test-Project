@@ -16,15 +16,26 @@ namespace rioe
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<rio::mdl::res::Vertex> vertices, std::vector<unsigned int> indicies);
+		Mesh(const std::vector<rio::mdl::res::Vertex>& vertices, const std::vector<unsigned int>& indicies);
 
 		void Draw() const;
 		Material* GetMaterial() { return mMaterial; };
 
+		Mesh(Mesh&& other) noexcept = default;
+
+		// Move assignment operator
+		Mesh& operator=(Mesh&& other) noexcept = default;
+
+		// Copy constructor
+		Mesh(const Mesh& other) = default;
+
+		// Copy assignment operator
+		Mesh& operator=(const Mesh& other) = default;
+
 	private:
 		friend class ModelLoader;
-		std::vector<rio::mdl::res::Vertex> vertices;
-		std::vector<unsigned int> indicies;
+		std::vector<rio::mdl::res::Vertex> mVertices;
+		std::vector<unsigned int> mIndicies;
 
 		rio::VertexBuffer mVBO;
 		rio::VertexArray mVAO;

@@ -7,6 +7,7 @@
 #include "gfx/mdl/res/rio_MeshData.h"
 
 #include "filedevice/rio_FileDeviceMgr.h"
+#include "gpu/rio_Drawer.h"
 
 namespace rioe
 {
@@ -97,14 +98,16 @@ namespace rioe
         // Iterate through meshes in the model
         for (const auto& tinyMesh : model.meshes)
         {
-            RIO_LOG("Primitives: %d\n", tinyMesh.primitives.size());
-
             for (const auto& primitive : tinyMesh.primitives)
             {
                 RIO_LOG("Does this model have indices? %d\n", primitive.indices);
 
                 std::vector<rio::mdl::res::Vertex> vertices;
                 std::vector<unsigned int> indicesData;
+
+                RIO_LOG("pos: %d\n", primitive.attributes.find("POSITION")->second);
+                RIO_LOG("normal: %d\n", primitive.attributes.find("NORMAL")->second);
+                RIO_LOG("texcoord: %d\n", primitive.attributes.find("TEXCOORD_0")->second);
 
                 const tinygltf::Accessor& positionAccessor = model.accessors[primitive.attributes.find("POSITION")->second];
                 const tinygltf::BufferView& positionBufferView = model.bufferViews[positionAccessor.bufferView];
@@ -156,6 +159,8 @@ namespace rioe
                         uvY = swapFloat(uvY);
                     }
 
+                    RIO_LOG("%f, %f, %f\n", x, y, z);
+
                     vertex.normal = { nX, nY, nZ };
                     vertex.pos = { x, y, z };
                     vertex.tex_coord = { uvX, uvY };
@@ -182,11 +187,8 @@ namespace rioe
                     auto& image = model.images[texture.source];
 
                     mesh->mMaterial = new Material();
-                    mesh->mMaterial->mTexture = std::make_shared<rio::Texture2D>(image.name.c_str());
-                    mesh->mMaterial->mTextureSampler = std::make_shared<rio::TextureSampler2D>();
-                    mesh->mMaterial->mShader = std::make_shared<rio::Shader>();
-
-                    mesh->mMaterial->mTextureSampler->linkTexture2D(mesh->mMaterial->mTexture.get());
+                    mesh->mMaterial->mTexture = new rio::Texture2D(image.name.c_str());
+                    mesh->mMaterial->mTextureSampler.linkTexture2D(mesh->mMaterial->mTexture);
 
                     if (material.doubleSided)
                     {

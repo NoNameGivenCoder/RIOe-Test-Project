@@ -4,18 +4,18 @@
 namespace rioe
 {
 	// Majority of this was copied over from rio::mdl::Mesh but changed to remove the res mesh.
-	Mesh::Mesh(std::vector<rio::mdl::res::Vertex> vertices, std::vector<unsigned int> indicies)
+	Mesh::Mesh(const std::vector<rio::mdl::res::Vertex>& vertices, const std::vector<unsigned int>& indicies) : mMaterial(nullptr)
 	{
-		this->vertices = vertices;
-		this->indicies = indicies;
+		mVertices = vertices;
+		mIndicies = indicies;
 
-		mIdxBuf = this->indicies.data();  // Now safe to access
-		mIdxNum = this->indicies.size();
+		mIdxBuf = mIndicies.data();
+		mIdxNum = mIndicies.size();
 
 		rio::VertexBuffer::invalidateCache(mIdxBuf, mIdxNum * sizeof(unsigned int));
 
 		mVBO.setStride(sizeof(rio::mdl::res::Vertex));
-		mVBO.setDataInvalidate(vertices.data(), vertices.size() * sizeof(rio::mdl::res::Vertex));
+		mVBO.setDataInvalidate(mVertices.data(), mVertices.size() * sizeof(rio::mdl::res::Vertex));
 
 		mPosStream.setLayout(0, rio::VertexStream::FORMAT_32_32_32_FLOAT, offsetof(rio::mdl::res::Vertex, pos));
 		mNormalStream.setLayout(1, rio::VertexStream::FORMAT_32_32_32_FLOAT, offsetof(rio::mdl::res::Vertex, normal));

@@ -6,7 +6,7 @@ camera:
     at:
         x: 0
         y: 0
-        z: 0
+        z: 10
     pos:
         x: 10
         y: 10
@@ -30,9 +30,9 @@ nodes:
                 y: 0
                 z: 0
             scale:
-                x: 0.1
-                y: 0.1
-                z: 0.1
+                x: 0.001
+                y: 0.001
+                z: 0.001
         properties:
             MeshProperty:
                 meshFileName: test

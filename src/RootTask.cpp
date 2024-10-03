@@ -30,7 +30,7 @@ void RootTask::prepare_()
     //auto modelProperty2 = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(7)->GetProperty<rioe::properties::ModelDisplayProperty>();
 
     //modelProperty2[0]->SetDisplayModel(rioe::ModelLoader::LoadModel("Bomb.glb"));
-    modelProperty[0]->SetDisplayModel(rioe::ModelLoader::LoadModel("Bomb.glb"));
+    modelProperty[0]->SetDisplayModel(rioe::ModelLoader::LoadModel("AngelIsland.glb"));
 }
 
 void RootTask::calc_()
@@ -39,17 +39,15 @@ void RootTask::calc_()
     rio::Window::instance()->clearDepthStencil();
 
 	rioe::SceneMgr::instance()->GetCurrentScene()->GetCamera()->pos().set(
-		std::sin(mCounter) * 10,
-		10,
-		std::cos(mCounter) * 10
+		std::sin(mCounter) * 1,
+		1,
+		std::cos(mCounter) * 1
 	);
-	mCounter += 0.8f / 60;
+	mCounter += 0.2f / 60;
 
     auto modelProperty = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(5)->GetProperty<rioe::properties::ModelDisplayProperty>();
-   // auto modelProperty2 = rioe::SceneMgr::instance()->GetCurrentScene()->GetNodeByID(7)->GetProperty<rioe::properties::ModelDisplayProperty>();
 
     modelProperty[0]->Update();
-    //modelProperty2[0]->Update();
 }
 
 void RootTask::exit_()
