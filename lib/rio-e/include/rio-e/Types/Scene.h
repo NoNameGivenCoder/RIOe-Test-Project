@@ -5,6 +5,8 @@
 #include "gfx/rio_Projection.h"
 #include "gfx/rio_Camera.h"
 
+#include "gfx/rio_PrimitiveRenderer.h"
+
 #include <unordered_map>
 #include <memory>
 
@@ -44,12 +46,26 @@ namespace rioe
         inline std::shared_ptr<Node> CreateNode()
         {
             auto node = std::make_shared<Node>();
-            node->ID = mNodes.size();
+            node->ID = mNodes.size() + 1;
             node->name = "Node (" + std::to_string(node->ID) + ")";
 
-            mNodes.emplace(node->ID, node);
+            mNodes.try_emplace(node->ID, node);
 
             return node;
+        }
+
+        inline void Update()
+        {
+            rio::PrimitiveRenderer::instance()->setCamera(mCamera);
+            rio::PrimitiveRenderer::instance()->setProjection(mProjection);
+
+            for (const auto& node : mNodes)
+            {
+                for (const auto& property : node.second->mProperties)
+                {
+                    property->Update();
+                }
+            }
         }
     private:
         friend class SceneMgr;

@@ -55,7 +55,7 @@ struct Matrix34 : BaseMtx34<T>
 
     // TODO
     //void setScaleWorld(T s);
-    //void setScaleWorld(const Vec3& s);
+    void setScaleWorld(const Vec3& s);
     void applyScaleWorld(T s);
     void applyScaleWorld(const Vec3& s);
 
@@ -64,7 +64,7 @@ struct Matrix34 : BaseMtx34<T>
     //void applyRotationLocal(const Vec3& r);
 
     // TODO
-    //void setRotationWorld(const Vec3& r);
+    void setRotationWorld(const Vec3& r);
     //void applyRotationWorld(const Vec3& r);
 
     void applyTranslationLocal(const Vec3& t);

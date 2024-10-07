@@ -7,7 +7,6 @@ namespace rioe
 		mRenderState.apply();
 		mShader.bind();
 
-		if (mTextureSampler.isBindable() && mTextureSampler.isTextureAvailable() && mTextureLocation != 0xFFFFFFFF)
-			mTextureSampler.tryBindFS(mTextureLocation, 0);
+		mTextureSampler.tryBindFS(mTextureLocation, 0);
 	}
 }

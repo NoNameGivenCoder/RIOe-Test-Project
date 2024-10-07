@@ -38,7 +38,7 @@ namespace rioe
 	std::unique_ptr<Property> PropertyCreatorMgr::CreateProperty(const std::string& type) {
 		auto it = mCreators.find(type);
 		if (it != mCreators.end()) {
-			RIO_LOG("[PropertyCreatorMgr] Created property: %s\n", type.c_str());
+			//RIO_LOG("[PropertyCreatorMgr] Created property: %s\n", type.c_str());
 			return it->second();
 		}
 		RIO_LOG("[PropertyCreatorMgr] Unknown property: %s\n", type.c_str());

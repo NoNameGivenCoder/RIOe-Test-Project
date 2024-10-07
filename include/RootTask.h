@@ -1,10 +1,6 @@
 #include <task/rio_Task.h>
-#include "rio-e/Types/Mesh.h"
-#include "gpu/rio_Shader.h"
-#include "math/rio_Matrix.h"
-#include "gpu/rio_UniformBlock.h"
-#include "gpu/rio_TextureSampler.h"
-#include "rio-e/Types/Model.h"
+#include "rio-e/Types/Node.h"
+#include "rio-e/Types/Skeleton.h"
 
 class RootTask : public rio::ITask
 {
@@ -17,28 +13,20 @@ private:
     void exit_() override;
 
 private:
-    rioe::Model* mModel;
-    rio::Shader mShader;
+    struct SkeletalBlock
+    {
+        rio::Matrix44f projection_matrix;
+        rio::Matrix44f root_position = rio::Matrix44f::ident;
+        rio::Matrix44f boneMatrices[40];
+    };
+
     double mCounter = 0.0;
 
-    rio::UniformBlock* mViewUniformBlock;
-    rio::UniformBlock* mModelUniformBlock;
+    std::shared_ptr<rioe::Node> mNode;
+    rioe::Skeleton* mSkeleton;
+
+    rio::UniformBlock* uniformBlockArray;
+    SkeletalBlock* skeletalBlockArray;
 
     rio::Matrix44f mProjMtx;
-
-    struct ModelBlock
-    {
-        rio::Matrix34f model_mtx;
-        rio::Matrix34f normal_mtx;
-        rio::BaseVec4u _padding[10];
-    };
-
-    struct ViewBlock
-    {
-        rio::Vector3f  view_pos;       u32 _padding;
-        rio::Matrix44f view_proj_mtx;
-    };
-
-    ModelBlock mModelBlock;
-    ViewBlock mViewBlock;
 };

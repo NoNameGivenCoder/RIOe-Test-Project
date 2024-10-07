@@ -632,9 +632,51 @@ template <typename T>
 inline void
 Matrix34<T>::applyScaleWorld(const Vec3& s)
 {
-    this->v[0] *= s.x;
-    this->v[1] *= s.y;
-    this->v[2] *= s.z;
+    this->v[0].x *= s.x;
+    this->v[0].y *= s.x;
+    this->v[0].z *= s.x;
+
+    this->v[1].x *= s.y;
+    this->v[1].y *= s.y;
+    this->v[1].z *= s.y;
+
+    this->v[2].x *= s.z;
+    this->v[2].y *= s.z;
+    this->v[2].z *= s.z;
+}
+
+template <typename T>
+inline void
+Matrix34<T>::setScaleWorld(const Vec3& s)
+{
+    this->v[0].x = s.x;
+    this->v[1].y = s.y;
+    this->v[2].z = s.z;
+}
+
+template <typename T>
+inline void
+Matrix34<T>::setRotationWorld(const Vec3& r)
+{
+    const T sinV[3] = { std::sin(r.x),
+                     std::sin(r.y),
+                     std::sin(r.z) };
+
+    const T cosV[3] = { std::cos(r.x),
+                        std::cos(r.y),
+                        std::cos(r.z) };
+
+    this->m[0][0] = (cosV[1] * cosV[2]);
+    this->m[1][0] = (cosV[1] * sinV[2]);
+    this->m[2][0] = -sinV[1];
+
+    this->m[0][1] = (sinV[0] * sinV[1] * cosV[2] - cosV[0] * sinV[2]);
+    this->m[1][1] = (sinV[0] * sinV[1] * sinV[2] + cosV[0] * cosV[2]);
+    this->m[2][1] = (sinV[0] * cosV[1]);
+
+    this->m[0][2] = (cosV[0] * cosV[2] * sinV[1] + sinV[0] * sinV[2]);
+    this->m[1][2] = (cosV[0] * sinV[2] * sinV[1] - sinV[0] * cosV[2]);
+    this->m[2][2] = (cosV[0] * cosV[1]);
 }
 
 template <typename T>

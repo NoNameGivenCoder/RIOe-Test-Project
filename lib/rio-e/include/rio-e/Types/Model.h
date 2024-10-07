@@ -28,7 +28,7 @@ namespace rioe
             rio::Matrix44f view_proj_mtx;
         };
     private:
-        std::vector<Mesh*> mMeshes; // Smart pointers for safe memory management
+        std::vector<Mesh*> mMeshes;
 
         friend class ModelLoader;
     };

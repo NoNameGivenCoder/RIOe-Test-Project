@@ -17,7 +17,7 @@ namespace rioe
 	{
 	public:
 		Material() : mTexture(nullptr), mTextureLocation(0) {};
-		~Material() {  }
+		~Material() { delete mTexture; mShader.unload(); }
 		void Bind() const;
 
 		rio::Shader* GetShader() { return &mShader; };

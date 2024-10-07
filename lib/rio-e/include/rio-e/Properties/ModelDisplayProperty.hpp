@@ -9,6 +9,8 @@
 
 #include "gfx/mdl/rio_Material.h"
 
+#include "misc/rio_MemUtil.h"
+
 #include <vector>
 
 namespace rioe {
@@ -31,7 +33,8 @@ namespace rioe {
 					mesh->GetMaterial()->Bind();
 
 					{
-						rio::Matrix34f worldMtx = GetParentNode().lock()->GetTransformationMatrix();
+						rio::Matrix34f worldMtx;
+						GetParentNode().lock()->GetWorldMatrix(&worldMtx);
 					
 						rio::Matrix34f normalMtx;
 					
@@ -53,8 +56,8 @@ namespace rioe {
 			
 					mesh->Draw();
 
-					 //rio::RenderState renderState;
-					//renderState.apply();
+					rio::RenderState renderState;
+					renderState.apply();
 				}
 			}
 

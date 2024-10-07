@@ -41,15 +41,15 @@ public:
     f32 aspect() const { return mAspect; }
     const Vector2f& offset() const { return mOffset; }
 
-    void setNear(f32 near)
+    void setNear(f32 nearPlane)
     {
-        mNear = near;
+        mNear = nearPlane;
         mDirty = true;
     }
 
-    void setFar(f32 far)
+    void setFar(f32 farPlane)
     {
-        mFar = far;
+        mFar = farPlane;
         mDirty = true;
     }
 
@@ -125,15 +125,15 @@ public:
     f32 left() const { return mLeft; }
     f32 right() const { return mRight; }
 
-    void setNear(f32 near)
+    void setNear(f32 nearPlane)
     {
-        mNear = near;
+        mNear = nearPlane;
         mDirty = true;
     }
 
-    void setFar(f32 far)
+    void setFar(f32 farPlane)
     {
-        mFar = far;
+        mFar = farPlane;
         mDirty = true;
     }
 

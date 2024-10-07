@@ -6,7 +6,7 @@ camera:
     at:
         x: 0
         y: 0
-        z: 10
+        z: 0
     pos:
         x: 10
         y: 10
@@ -17,42 +17,4 @@ env:
         g: 1
         b: 0
         a: 0
-nodes:
-    5:
-        name: obj_emerald
-        transform:
-            position:
-                x: 0
-                y: 0
-                z: 0
-            rotation:
-                x: -30
-                y: 0
-                z: 0
-            scale:
-                x: 0.001
-                y: 0.001
-                z: 0.001
-        properties:
-            MeshProperty:
-                meshFileName: test
-                meshKey: emerald
-    7:
-        name: obj_emerald
-        transform:
-            position:
-                x: 10
-                y: 0
-                z: 0
-            rotation:
-                x: -30
-                y: 0
-                z: 0
-            scale:
-                x: 0.1
-                y: 0.1
-                z: 0.1
-        properties:
-            MeshProperty:
-                meshFileName: test
-                meshKey: emerald
+nodes:    

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "yaml-cpp/yaml.h"
 
 namespace rioe
 {

@@ -28,7 +28,7 @@ file(GLOB_RECURSE RIO_SOURCES lib/rio/src/*.cpp lib/rio/include/*.h)
 file(GLOB_RECURSE RIOE_SOURCES lib/rio-e/src/*.cpp lib/rio-e/include/*.h)
 file(GLOB_RECURSE YAML_SOURCES lib/yaml-cpp/src/*.cpp lib/yaml-cpp/include/*.h)
 
-add_definitions(-DRIO_DEBUG -DYAML_CPP_STATIC_DEFINE -D_WIN32)
+add_definitions(-DRIO_DEBUG -DYAML_CPP_STATIC_DEFINE -D_WIN32 -DNOMINMAX)
 
 add_executable(helloworld_cpp ${RIO_SOURCES} ${SOURCES} ${RIOE_SOURCES} ${YAML_SOURCES} ${GLTF_SOURCES})
 
