@@ -1,1 +1,0 @@
-/opt/devkitpro/msys2/usr/bin/cc.exe -Wl,--enable-auto-import CMakeFiles/example.dir/test/example.c.o -o example.exe -Wl,--out-implib,libexample.dll.a -Wl,--major-image-version,0,--minor-image-version,0  libz.dll.a

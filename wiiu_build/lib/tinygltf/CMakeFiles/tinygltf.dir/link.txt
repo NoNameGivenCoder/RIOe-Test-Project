@@ -1,2 +1,0 @@
-/opt/devkitpro/devkitPPC/bin/powerpc-eabi-gcc-ar.exe qc libtinygltf.a CMakeFiles/tinygltf.dir/tiny_gltf.o
-/opt/devkitpro/devkitPPC/bin/powerpc-eabi-gcc-ranlib.exe libtinygltf.a

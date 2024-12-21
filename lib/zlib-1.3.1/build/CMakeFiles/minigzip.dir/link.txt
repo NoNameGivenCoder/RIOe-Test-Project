@@ -1,1 +1,0 @@
-/opt/devkitpro/msys2/usr/bin/cc.exe -Wl,--enable-auto-import CMakeFiles/minigzip.dir/test/minigzip.c.o -o minigzip.exe -Wl,--out-implib,libminigzip.dll.a -Wl,--major-image-version,0,--minor-image-version,0  libz.dll.a

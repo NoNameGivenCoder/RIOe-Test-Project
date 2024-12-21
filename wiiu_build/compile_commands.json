@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/joeyb/Documents/RIOeProject/wiiu_build/lib/tinygltf",
-  "command": "/opt/devkitpro/devkitPPC/bin/powerpc-eabi-g++.exe -DNOMINMAX -DRIO_CAFE_MAIN_FILE_DEVICE_AS_CONTENT -DRIO_DEBUG -D__WIIU__ -D__WUT__ -D__powerpc__ -I/opt/devkitpro/portlibs/ppc/include -I/opt/devkitpro/portlibs/wiiu/include -isystem /opt/devkitpro/wut/include -mcpu=750 -meabi -mhard-float -ffunction-sections -fdata-sections -DESPRESSO -D__WIIU__ -D__WUT__ -g -O2 -DNDEBUG -std=c++11 -o CMakeFiles/tinygltf.dir/tiny_gltf.o -c /home/joeyb/Documents/RIOeProject/lib/tinygltf/tiny_gltf.cc",
-  "file": "/home/joeyb/Documents/RIOeProject/lib/tinygltf/tiny_gltf.cc",
-  "output": "lib/tinygltf/CMakeFiles/tinygltf.dir/tiny_gltf.o"
-}
-]
