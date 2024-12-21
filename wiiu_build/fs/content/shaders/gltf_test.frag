@@ -8,11 +8,11 @@ in vec2 TexCoord;  // Color gradient based on vertex position
 // Output to the framebuffer
 out vec4 FragColor;
 
-uniform sampler2D albedoMap;
+uniform sampler2D uAlbedoMap;
 
 void main()
 {
-    vec4 texColor = texture(albedoMap, TexCoord);
+    vec4 texColor = texture(uAlbedoMap, TexCoord);
 
     // Ambient lighting (low intensity background light)
     float ambientStrength = 1;

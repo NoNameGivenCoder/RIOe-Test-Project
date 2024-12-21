@@ -4,6 +4,7 @@ uniform int u_mode;
 uniform vec3 u_const1;
 uniform vec3 u_const2;
 uniform vec3 u_const3;
+uniform vec3 u_SunPosition;
 
 struct PS_PUSH_DATA
 {
@@ -17,6 +18,8 @@ uniform sampler2D s_texture;
 
 in vec4 color;
 in vec2 texCoord;
+in vec3 FragPos;
+in vec3 Normal;
 
 out vec4 FragColor;
 
@@ -24,12 +27,23 @@ void main(void)
 {
     // I honestly don't know what to do with the vertex color
 
+    // No Texture
     if (u_mode == 0)
-        FragColor = vec4(u_const1, 1.0);
-
+    {
+	float downFactor = dot(Normal, vec3(0.0, -1.0, 0.0));
+        if (downFactor > 0.15)
+    	{
+        	FragColor = vec4(u_const1 * 0.7, 0); // Darken the color a bit
+    	}
+    	else
+    	{
+        	FragColor = vec4(u_const1, 0);
+    	}
+    }
+    // Assuming mask
     else if (u_mode == 1)
         FragColor = texture(s_texture, texCoord);
-
+    // Has Texture
     else if (u_mode == 2)
     {
         vec4 textureColor = texture(s_texture, texCoord);

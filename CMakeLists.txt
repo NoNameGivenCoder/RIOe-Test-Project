@@ -46,8 +46,6 @@ else()
 
     set(ZLIB_LIBRARY "zlibstatic")
     set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/zlib-1.3.1")
-
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/lib/curl-8.11.0")
 endif()
 
 file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")

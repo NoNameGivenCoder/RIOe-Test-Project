@@ -1,6 +1,6 @@
 # Set app configuration values
 set(WINDOW_NAME "RIO(e) Test App") # Starting window name, can be changed during runtime.
-set(FFL_MLC_PATH "C:/Users/joeyb/Documents/RIOeProject/out/build/Windows") # Used when using FFL. Path to FFL resources
+set(FFL_MLC_PATH "./") # Used when using FFL. Path to FFL resources
 
 # GLFW Settings
 set(GLEW_INCLUDE_DIR "lib/glew/include")
