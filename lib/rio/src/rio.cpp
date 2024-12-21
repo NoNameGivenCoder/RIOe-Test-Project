@@ -116,7 +116,7 @@ void EnterMainLoop()
         TaskMgr::instance()->calc();
 
         // Render
-        lyr::Renderer::instance()->render();
+        //lyr::Renderer::instance()->render();
 
         // Swap the front and back buffers
         window->swapBuffers();

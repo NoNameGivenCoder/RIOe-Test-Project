@@ -1,12 +1,25 @@
 #include "rio-e/Types/Material.h"
+#include <math/rio_Vector.h>
 
 namespace rioe
 {
-	void Material::Bind() const
+	void Material::Bind()
 	{
-		mRenderState.apply();
+		mRenderState.applyDepthAndStencilTest();
+		mRenderState.applyBlendAndFastZ();
+		mRenderState.applyColorMask();
+
 		mShader.bind();
 
-		mTextureSampler.tryBindFS(mTextureLocation, 0);
+		if (mUseTexture)
+		{
+			for (int i = 0; i < TEXTURE_TYPE_MAX; ++i)
+				if (mTextures[i])
+					mTextureSamplers[i].tryBindFS(mTextureShaderLocation[i], 1);
+		}
+		else
+		{
+			mShader.setUniform(mAlbedoColor.v, u32(-1), mAlbedoColorLocation);
+		}
 	}
 }

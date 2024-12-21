@@ -1023,7 +1023,37 @@ void Shader::setUniformArray(u32 count, const BaseVec4u* v, u32 vs_location, u32
 //void Shader::setUniformArray(u32 count, const BaseMtx43f* v, u32 vs_location, u32 fs_location)
 
 // GLSL type: mtx4[]
-//void Shader::setUniformArray(u32 count, const BaseMtx44f* v, u32 vs_location, u32 fs_location)
+void Shader::setUniformArray(u32 count, const BaseMtx44f* v, u32 vs_location, u32 fs_location)
+{
+    RIO_ASSERT(count);
+    RIO_ASSERT(v);
+
+    f32 *mat = new f32[count * 16];
+
+    for (u32 i = 0; i < count * 16; i++)
+        mat[i] = v->a[i];
+
+    u32 location;
+
+    if (vs_location != 0xFFFFFFFF)
+    {
+        if (fs_location != 0xFFFFFFFF)
+            RIO_ASSERT(vs_location == fs_location);
+
+        location = vs_location;
+    }
+    else
+    {
+        if (fs_location == 0xFFFFFFFF)
+            return;
+
+        location = fs_location;
+    }
+
+    RIO_GL_CALL(glUniformMatrix4fv(location, count, GL_FALSE, mat));
+
+    delete[] mat;
+}
 
 }
 

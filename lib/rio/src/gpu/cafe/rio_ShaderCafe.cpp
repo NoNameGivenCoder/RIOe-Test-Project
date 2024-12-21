@@ -776,7 +776,26 @@ void Shader::setUniformArray(u32 count, const BaseVec4u* v, u32 vs_location, u32
 //void Shader::setUniformArray(u32 count, const BaseMtx43f* v, u32 vs_location, u32 fs_location)
 
 // GLSL type: mtx4[]
-//void Shader::setUniformArray(u32 count, const BaseMtx44f* v, u32 vs_location, u32 fs_location)
+void Shader::setUniformArray(u32 count, const BaseMtx44f* v, u32 vs_location, u32 fs_location)
+{
+    if (vs_location == 0xFFFFFFFF && fs_location == 0xFFFFFFFF)
+        return;
+
+    const u32 NUM_COL = 4;
+
+    f32* mat_trans = new f32[count * 16];
+
+    for (u32 i = 0; i < count * 16; i++)
+        mat_trans[i] = v->a[i];
+
+    if (vs_location != 0xFFFFFFFF)
+        GX2SetVertexUniformReg(vs_location, count * (NUM_COL * 4) * 16, mat_trans);
+
+    if (fs_location != 0xFFFFFFFF)
+        GX2SetPixelUniformReg(fs_location, count * (NUM_COL * 4) * 16, mat_trans);
+
+    delete[] mat_trans;
+}
 
 }
 

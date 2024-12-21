@@ -2,6 +2,7 @@
 
 #include "rio-e/Types/Property.h"
 #include "rio-e/Types/Node.h"
+#include "rio-e/Types/Skeleton.h"
 
 #include "gfx/rio_PrimitiveRenderer.h"
 
@@ -11,36 +12,33 @@
 
 namespace rioe {
 	namespace properties {
-		class DebugDisplayProperty : public Property
+		class DebugDisplayProperty : public IProperty
 		{
 		public:
 			~DebugDisplayProperty() { };
 
-			void Start() override
-			{
-
-			}
-
-			void Update() override
-			{
-				auto parentNode = GetParentNode().lock().get();
-
-				if (!parentNode)
-					return;
-
-				rio::Matrix34f worldMatrix;
-				parentNode->GetWorldMatrix(&worldMatrix);
-
-				rio::PrimitiveRenderer::instance()->begin();
-				rio::PrimitiveRenderer::instance()->drawSphere8x16({ worldMatrix.m[0][3], worldMatrix.m[1][3], worldMatrix.m[2][3] }, 0.1, mColor);
-				rio::PrimitiveRenderer::instance()->end();
-			}
+			//void Start() override
+			//{
+			//
+			//}
+			//
+			//void UpdateStep() override
+			//{
+			//	auto parentNode = GetParentNode().lock().get();
+			//
+			//	if (!parentNode)
+			//		return;
+			//
+			//	rio::Matrix44f worldMatrix = parentNode->GetWorldMatrix();
+			//
+			//	rio::PrimitiveRenderer::instance()->drawSphere8x16({ worldMatrix.m[0][3], worldMatrix.m[1][3], worldMatrix.m[2][3] }, 0.1, mColor);
+			//}
 
 			void ChangeColor(rio::Color4f color) { mColor = color; };
 
-			void Load(YAML::Node node) override {};
-			void CreatePropertiesMenu() override {};
-			YAML::Node Save() override { return YAML::Node(); };
+
+			rioe::Skeleton* mSkeleton;
+			int boneId;
 
 		private:
 			rio::Color4f mColor = rio::Color4f::cRed;

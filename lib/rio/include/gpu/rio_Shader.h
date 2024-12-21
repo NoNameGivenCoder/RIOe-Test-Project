@@ -274,7 +274,7 @@ public:
     //static void setUniformArray(u32 count, const BaseMtx43f* v, u32 vs_location, u32 fs_location);
 
     // GLSL type: mtx4[]
-    //static void setUniformArray(u32 count, const BaseMtx44f* v, u32 vs_location, u32 fs_location);
+    static void setUniformArray(u32 count, const BaseMtx44f* v, u32 vs_location, u32 fs_location);
 
 private:
     void initialize_();

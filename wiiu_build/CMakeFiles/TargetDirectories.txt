@@ -1,0 +1,5 @@
+/home/joeyb/Documents/RIOeProject/wiiu_build/CMakeFiles/rioe_testapp.dir
+/home/joeyb/Documents/RIOeProject/wiiu_build/CMakeFiles/edit_cache.dir
+/home/joeyb/Documents/RIOeProject/wiiu_build/CMakeFiles/rebuild_cache.dir
+/home/joeyb/Documents/RIOeProject/wiiu_build/lib/tinygltf/CMakeFiles/edit_cache.dir
+/home/joeyb/Documents/RIOeProject/wiiu_build/lib/tinygltf/CMakeFiles/rebuild_cache.dir

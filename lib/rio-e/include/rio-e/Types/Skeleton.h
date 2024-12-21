@@ -11,6 +11,41 @@
 
 namespace rioe
 {
+	struct Keyframe
+	{
+		rio::Vector3f translation = { 0, 0, 0 };
+		rio::Vector3f scale = { 0, 0, 0 };
+		rio::Quatf rotation = { 0, 0, 0, 0 };
+
+		f32 time;
+	};
+
+	enum AnimationInterpolation
+	{
+		Linear,
+		Step,
+		Cubic
+	};
+
+	enum ChannelTarget
+	{
+		Translation,
+		Rotation,
+		Scale
+	};
+
+	struct AnimationChannel {
+		int nodeIndex;
+		AnimationInterpolation interpolation;
+		ChannelTarget target;
+		std::vector<Keyframe> keyframes;
+	};
+
+	struct Animation {
+		std::string name;
+		std::vector<AnimationChannel> channels;
+	};
+
 	class SkeletalMesh
 	{
 	public:
@@ -70,9 +105,19 @@ namespace rioe
 		std::vector<std::shared_ptr<Node>>& GetBones() {
 			return mBones;
 		};
+
+		std::vector<rio::Matrix44f> GetInverseBindMatrices() {
+			return mInverseBindMatrices;
+		};
+
+		void ApplyAnimation(std::string animationName, f32 time);
 	private:
 		friend class ModelLoader;
 		std::vector<SkeletalMesh*> mMeshes;
 		std::vector<std::shared_ptr<Node>> mBones;
+		std::unordered_map<int, std::shared_ptr<Node>> mBoneAnimationMap;
+		std::vector<rio::Matrix44f> mInverseBindMatrices;
+
+		std::unordered_map<std::string, Animation> mAnimations;
 	};
 }

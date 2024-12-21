@@ -4,51 +4,52 @@
 #include "math/rio_Math.h"
 #include "math/rio_Matrix.h"
 #include "math/rio_Vector.h"
+#include "math/rio_Quat.h"
 
 #include "rio-e/Types/Property.h"
 
 #include <string>
 #include <memory>
 #include <vector>
+#include <iterator>
+#include <algorithm>
 
 namespace rioe
 {
-    static void LogMatrix(const rio::Matrix34f& matrix)
-    {
-        for (int i = 0; i < 3; ++i)
-        {
-            RIO_LOG("%f %f %f %f\n", matrix.m[i][0], matrix.m[i][1], matrix.m[i][2], matrix.m[i][3]);
-        }
-    };
-
     class Node : public std::enable_shared_from_this<Node>
     {
     public:
         int ID;
         std::string name;
 
-        inline rio::Vector3f GetScale() const { return mScale; };
-        inline rio::Vector3f GetPosition() const { return mPosition; };
-        inline rio::Vector3f GetRotation() const { return mRotation; };
+        Node() : ID(-1) {};
+        ~Node() { mProperties.clear(); };
 
-        inline rio::Matrix34f& GetLocalMatrix() { return mTransformMatrix; };
-        inline void GetWorldMatrix(rio::Matrix34f* pMatrix)
+        inline rio::Vector3f GetScale() const { return mScale; };
+        inline rio::Vector3f GetPosition() const { return mTranslation; };
+        inline rio::Quatf GetRotation() const { return mRotation; };
+
+        inline rio::Matrix44f GetLocalMatrix() 
         {
-            if (mParent.lock())
-            {
-                rio::Matrix34f parentMatrix;
-                mParent.lock()->GetWorldMatrix(&parentMatrix);
-                pMatrix->setMul(parentMatrix, mTransformMatrix);
-            }
-            else
-            {
-                *pMatrix = mTransformMatrix;
-            }    
+            CalculateMatrix(rio::Matrix44f::ident);
+
+            return mLocalTransformMatrix; 
+        };
+        inline rio::Matrix44f GetWorldMatrix()
+        {
+            rio::Matrix44f parentMatrix = rio::Matrix44f::ident;
+
+            if (GetParent())
+                parentMatrix = GetParent()->GetWorldMatrix();
+
+            CalculateMatrix(parentMatrix);
+
+            return mWorldTransformMatrix;
         };
 
         inline std::shared_ptr<Node> GetParent() const { return mParent.lock(); };
 
-        inline void AddChild(std::shared_ptr<Node> child)
+        void AddChild(std::shared_ptr<Node> child)
         {
             if (IsDescendantOf(child))
             {
@@ -74,68 +75,80 @@ namespace rioe
             }
         }
 
-        inline std::vector<std::shared_ptr<Node>>& GetChildrenMutable() { return mChildren; };
-        inline const std::vector<std::shared_ptr<Node>>& GetChildren() const { return mChildren; };
+        inline std::vector<std::shared_ptr<Node>>& GetChildren() { return mChildren; };
 
-        inline void SetScale(rio::Vector3f scale)
+        inline void SetScale(const rio::Vector3f& scale)
         {
             mScale = scale;
-            mTransformMatrix.setScaleWorld(mScale);
-            //UpdateMatrix();
+            return SetDirty();
         };
-        inline void SetPosition(rio::Vector3f pos)
+        inline void SetPosition(const rio::Vector3f& pos)
         {
-            mPosition = pos;
-            mTransformMatrix.setTranslationWorld(pos);
-            //UpdateMatrix();
+            mTranslation = pos;
+            return SetDirty();
         };
-        inline void SetRotation(rio::Vector3f rot)
+        inline void SetRotation(const rio::Quatf rot)
         {
             mRotation = rot;
-            mTransformMatrix.setRotationWorld(rot);
-            //UpdateMatrix();
-        };
+            return SetDirty();
+        }
 
-        inline void AddProperty(std::shared_ptr<Property> property)
+        inline void AddProperty(std::shared_ptr<IProperty> property)
         {
             property->parentNode = shared_from_this();
             mProperties.push_back(property);
-            property->Start();
         }
         
         template <typename T>
-        std::vector<T*> GetProperty()
+        std::shared_ptr<T> GetProperty()
         {
-            std::vector<T*> result;
+            static_assert(std::is_base_of<IProperty, T>::value, "T must inherit from base class IProperty.");
 
             for (const auto& property : mProperties)
             {
-                if (T* propertyFound = dynamic_cast<T*>(property.get()))
-                {
-                    result.push_back(propertyFound);
-                }
+                if (auto propertyFound = std::dynamic_pointer_cast<T>(property))
+                    return propertyFound;
             }
-
-            return result;
         }
 
     private:
-        rio::Matrix34f mTransformMatrix = rio::Matrix34f::ident;
-        rio::Vector3f mPosition;
-        rio::Vector3f mRotation;
-        rio::Vector3f mScale;
+        rio::Matrix44f mLocalTransformMatrix = rio::Matrix44f::ident;
+        rio::Matrix44f mWorldTransformMatrix = rio::Matrix44f::ident;
+        bool mDirtyMatrix = true;
 
-        std::vector<std::shared_ptr<Property>> mProperties;
+        rio::Vector3f mTranslation = { 0, 0, 0 };
+        rio::Vector3f mScale = { 1, 1, 1 };
+        rio::Quatf mRotation = { 0, 0, 0, 0 };
+
+        std::vector<std::shared_ptr<IProperty>> mProperties;
         std::vector<std::shared_ptr<Node>> mChildren;
         std::weak_ptr<Node> mParent;
 
-        friend class Scene;
+        friend class Engine;
     private:
-        friend class Node;
-
-        inline void UpdateMatrix()
+        inline void SetDirty()
         {
-            
+            mDirtyMatrix = true;
+
+            for (const auto& child : mChildren)
+                child->SetDirty();
+        };
+
+        inline void CalculateMatrix(rio::Matrix44f parentMatrix)
+        {
+            if (mDirtyMatrix)
+            {
+                mLocalTransformMatrix.makeSQT(mScale, mRotation, mTranslation);
+                
+                mDirtyMatrix = false;
+            }
+
+            mWorldTransformMatrix.setMul(parentMatrix, mLocalTransformMatrix);
+
+            for (const auto& child : mChildren)
+            {
+                child->CalculateMatrix(mWorldTransformMatrix);
+            } 
         };
 
         // If a node is the descendant of another node.
@@ -151,6 +164,6 @@ namespace rioe
                 current = parent;
             }
             return false;
-        }
+        };
     };
 }

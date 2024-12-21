@@ -1,26 +1,27 @@
 #pragma once
 
 #include <memory>
-#include "yaml-cpp/yaml.h"
 
 namespace rioe
 {
     class Node;
-    class Property
+    class Engine;
+    class IProperty
     {
     public:
-        Property() {};
-        virtual ~Property() = default;
+        IProperty() { Start(); };
+        virtual ~IProperty() = default;
 
     public:
-        virtual void Start() = 0;
-        virtual void Update() = 0;
-        virtual void CreatePropertiesMenu() = 0;
+        // Runs at the start of the scene, or when the property is created
+        virtual void Start() {};
+        // Runs at every logic step
+        virtual void UpdateStep() {};
+        // Runs at every draw step
+        virtual void DrawStep() {};
+        // Stores the property name in string format
+        virtual const char* GetPropertyName() { return "Property"; };
 
-        virtual YAML::Node Save() = 0;
-        virtual void Load(YAML::Node node) = 0;
-
-    public:
         inline std::weak_ptr<Node> GetParentNode() const { return parentNode; };
     private:
         friend class Node;

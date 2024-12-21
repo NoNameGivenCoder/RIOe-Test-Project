@@ -5,21 +5,12 @@
 #endif // RIO_IS_WIN
 
 #include "rio.h"
+#include "filedevice/rio_FileDeviceMgr.h"
 
-#include "RootTask.h"
+#include "rio-e/Engine.hpp"
 
-#include "rio-e/PropertyCreatorMgr.h"
-#include "rio-e/SceneMgr.h"
-#include "rio-e/ModelLoader.h"
-
-static const rio::InitializeArg cInitializeArg = {
-    .window = {
-#if RIO_IS_WIN
-        .gl_major = 4,
-        .gl_minor = 3
-#endif // RIO_IS_WIN
-    }
-};
+#include "Scenes/TestScene.h"
+#include "Scenes/TestScene2.h"
 
 int main()
 {
@@ -27,21 +18,11 @@ int main()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif // RIO_IS_WIN
 
-    rioe::SceneMgr::createSingleton();
-    rioe::PropertyCreatorMgr::createSingleton();
+    rioe::GetEngine()->AddScene<TestScene>("TestScene");
 
-    // Initialize RIO with root task
-    if (!rio::Initialize<RootTask>(cInitializeArg))
-        return -1;
+    rioe::GetEngine()->Start("TestScene");
 
-    // Main loop
-    rio::EnterMainLoop();
-
-    rioe::SceneMgr::destroySingleton();
-    rioe::PropertyCreatorMgr::destroySingleton();
-    rioe::ModelLoader::Cleanup();
-    // Exit RIO
-    rio::Exit();
+    rioe::GetEngine()->Exit();
 
     return 0;
 }

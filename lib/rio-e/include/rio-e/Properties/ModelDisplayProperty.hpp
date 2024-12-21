@@ -15,55 +15,50 @@
 
 namespace rioe {
 	namespace properties {
-		class ModelDisplayProperty : public Property
+		class ModelDisplayProperty : public IProperty
 		{
 		public:
 			~ModelDisplayProperty() { Cleanup(); };
 
-			void Start() override
-			{
-				
-			}
-
-			void Update() override
-			{
-				for (int i = 0; i < mMeshCount; i++)
-				{
-					auto mesh = mDisplayModel->GetMeshes()[i];
-					mesh->GetMaterial()->Bind();
-
-					{
-						rio::Matrix34f worldMtx;
-						GetParentNode().lock()->GetWorldMatrix(&worldMtx);
-					
-						rio::Matrix34f normalMtx;
-					
-						normalMtx.setInverseTranspose(worldMtx);
-					
-						mesh->GetMaterial()->GetShader()->setUniformArray(3, worldMtx.v, mModelMatrixLocation[i], u32(-1));
-						mesh->GetMaterial()->GetShader()->setUniformArray(3, normalMtx.v, mNormalMatrixLocation[i], u32(-1));
-					}
-					
-					{
-						rio::Matrix44f view_proj_mtx;
-						rio::BaseMtx34f viewMtx;
-						rioe::SceneMgr::instance()->GetCurrentScene()->GetCamera()->getMatrix(&viewMtx);
-					
-						view_proj_mtx.setMul(mProjMtx, viewMtx);
-
-						mesh->GetMaterial()->GetShader()->setUniformArray(4, view_proj_mtx.v, mViewProjectionLocation[i], u32(-1));
-					}
-			
-					mesh->Draw();
-
-					rio::RenderState renderState;
-					renderState.apply();
-				}
-			}
-
-			void Load(YAML::Node node) override {};
-			void CreatePropertiesMenu() override {};
-			YAML::Node Save() override { return YAML::Node(); };
+			//void Start() override
+			//{
+			//	
+			//}
+			//
+			//void UpdateStep() override
+			//{
+			//	//for (int i = 0; i < mMeshCount; i++)
+			//	//{
+			//	//	auto mesh = mDisplayModel->GetMeshes()[i];
+			//	//	mesh->GetMaterial()->Bind();
+			//	//
+			//	//	{
+			//	//		rio::Matrix44f worldMtx = GetParentNode().lock()->GetWorldMatrix();
+			//	//							
+			//	//		rio::Matrix44f normalMtx;
+			//	//	
+			//	//		normalMtx.setInverse(worldMtx);
+			//	//	
+			//	//		mesh->GetMaterial()->GetShader()->setUniformArray(3, worldMtx.v, mModelMatrixLocation[i], u32(-1));
+			//	//		mesh->GetMaterial()->GetShader()->setUniformArray(3, normalMtx.v, mNormalMatrixLocation[i], u32(-1));
+			//	//	}
+			//	//	
+			//	//	{
+			//	//		rio::Matrix44f view_proj_mtx;
+			//	//		rio::BaseMtx34f viewMtx;
+			//	//		rioe::SceneMgr::instance()->GetCurrentScene()->GetCamera()->getMatrix(&viewMtx);
+			//	//	
+			//	//		view_proj_mtx.setMul(mProjMtx, viewMtx);
+			//	//
+			//	//		mesh->GetMaterial()->GetShader()->setUniformArray(4, view_proj_mtx.v, mViewProjectionLocation[i], u32(-1));
+			//	//	}
+			//	//
+			//	//	mesh->Draw();
+			//	//
+			//	//	rio::RenderState renderState;
+			//	//	renderState.apply();
+			//	//}
+			//}
 
 			void SetDisplayModel(rioe::Model* pDisplayModel) { Cleanup(); mDisplayModel = pDisplayModel; InitializeModel(); };
 
@@ -79,12 +74,18 @@ namespace rioe {
 
 			void Cleanup()
 			{
-				for (int i = 0; i < mMeshCount; i++)
+				if (mDisplayModel)
 				{
-					if (mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->isLoaded())
-						mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->unload();
+					//for (int i = 0; i < mMeshCount; i++)
+					//{
+					//	if (!&mDisplayModel->GetMeshes())
+					//		continue;
+					//
+					//	if (mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->isLoaded())
+					//		mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->unload();
+					//}
 				}
-
+				
 				delete[] mModelMatrixLocation;
 				delete[] mNormalMatrixLocation;
 				delete[] mViewProjectionLocation;
@@ -92,29 +93,29 @@ namespace rioe {
 
 			void InitializeModel()
 			{
-				rio::MemUtil::copy(&mProjMtx, &rioe::SceneMgr::instance()->GetCurrentScene()->GetPerspectiveProjection()->getMatrix(), sizeof(rio::Matrix44f));
-
-				mMeshCount = mDisplayModel->GetMeshes().size();
-
-				mModelMatrixLocation = new u32[mMeshCount];
-				mNormalMatrixLocation = new u32[mMeshCount];
-				mViewProjectionLocation = new u32[mMeshCount];
-
-				for (int i = 0; i < mMeshCount; i++)
-				{
-					auto& mesh = mDisplayModel->GetMeshes()[i];
-
-					if (mesh->GetMaterial()->GetShader()->isLoaded())
-						mesh->GetMaterial()->GetShader()->unload();
-
-					mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->load("gltf_test");
-
-					mModelMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("model");
-					mNormalMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("normalMtx");
-					mViewProjectionLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("viewProj");
-
-					mesh->GetMaterial()->SetTextureLocation(mesh->GetMaterial()->GetShader()->getFragmentSamplerLocation("texture0"));
-				}
+				//rio::MemUtil::copy(&mProjMtx, &rioe::SceneMgr::instance()->GetCurrentScene()->GetPerspectiveProjection()->getMatrix(), sizeof(rio::Matrix44f));
+				//
+				//mMeshCount = mDisplayModel->GetMeshes().size();
+				//
+				//mModelMatrixLocation = new u32[mMeshCount];
+				//mNormalMatrixLocation = new u32[mMeshCount];
+				//mViewProjectionLocation = new u32[mMeshCount];
+				//
+				//for (int i = 0; i < mMeshCount; i++)
+				//{
+				//	auto& mesh = mDisplayModel->GetMeshes()[i];
+				//
+				//	if (mesh->GetMaterial()->GetShader()->isLoaded())
+				//		mesh->GetMaterial()->GetShader()->unload();
+				//
+				//	mDisplayModel->GetMeshes()[i]->GetMaterial()->GetShader()->load("gltf_test");
+				//
+				//	mModelMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("model");
+				//	mNormalMatrixLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("normalMtx");
+				//	mViewProjectionLocation[i] = mesh->GetMaterial()->GetShader()->getVertexUniformLocation("viewProj");
+				//
+				//	mesh->GetMaterial()->SetTextureLocation(mesh->GetMaterial()->GetShader()->getFragmentSamplerLocation("texture0"));
+				//}
 			}
 		};
 	}

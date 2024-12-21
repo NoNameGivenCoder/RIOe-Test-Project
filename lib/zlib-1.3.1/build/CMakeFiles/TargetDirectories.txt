@@ -1,0 +1,11 @@
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/zlib.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/zlibstatic.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/example.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/minigzip.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/test.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/edit_cache.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/rebuild_cache.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/list_install_components.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/install.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/install/local.dir
+/home/joeyb/Downloads/zlib131/zlib-1.3.1/build/CMakeFiles/install/strip.dir

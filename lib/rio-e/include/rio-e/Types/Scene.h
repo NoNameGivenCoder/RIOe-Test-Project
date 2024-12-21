@@ -4,78 +4,81 @@
 
 #include "gfx/rio_Projection.h"
 #include "gfx/rio_Camera.h"
-
-#include "gfx/rio_PrimitiveRenderer.h"
+#include "gfx/rio_Color.h"
 
 #include <unordered_map>
 #include <memory>
+#include <cstring>
+
+namespace rio { class Shader; }
 
 namespace rioe
 {
-    class Scene
+    struct EnvironmentInfo
+    {
+        rio::Vector3f SunDirection = { 0, 0, 0 };
+
+        //x r, g y, b z
+        rio::Color4f SunColor = rio::Color4f::cWhite;
+    };
+
+    class IScene
     {
     public:
-        inline std::shared_ptr<Node> GetNodeByID(int ID) { return mNodes[ID]; };
-        inline const std::unordered_map<int, std::shared_ptr<Node>> GetAllNodes() { return mNodes; };
-        inline const size_t GetNodeCount() const { return mNodes.size(); };
-
-        inline const std::string& GetSceneName() const { return sceneName; };
-
-        inline rio::LookAtCamera* GetCamera() { return &mCamera; };
-        inline rio::PerspectiveProjection* GetPerspectiveProjection() { return &mProjection; };
-
-        inline void DeleteNode(int ID) 
-        { 
-            auto node = GetNodeByID(ID);
-            mNodes.erase(ID); 
-            
-            if (auto parent = node->GetParent())
-            {
-                auto& children = parent->GetChildrenMutable();
-                children.erase(std::remove(children.begin(), children.end(), node), children.end());
-            }
-
-            if (auto children = node->GetChildren(); children.size() >= 1)
-            {
-                for (const auto& child : children)
-                {
-                   DeleteNode(child->ID);
-                }
-            }
-        }
-        inline std::shared_ptr<Node> CreateNode()
+        IScene() 
         {
-            auto node = std::make_shared<Node>();
-            node->ID = mNodes.size() + 1;
-            node->name = "Node (" + std::to_string(node->ID) + ")";
+            mOrthoProjection.set(-1.0f, 1.0f, 720.0f, 0.0f, 0.0f, 1280.0f);
+            mPerspectiveProjection.set(1.f, 10000.0f, rio::Mathf::deg2rad(90.0f), static_cast<f32>(1280) / 720);
+        };
+    public:
+        std::shared_ptr<Node> GetNodeByID(int ID) { return mNodes.at(ID); };
+        std::unordered_map<int, std::shared_ptr<Node>>* GetAllNodes() { return &mNodes; };
+        const size_t GetNodeCount() { return mNodes.size(); };
+    public:
+        rio::LookAtCamera* GetCamera() { return &mCamera; };
+        rio::PerspectiveProjection& GetPerspectiveProjection() { return mPerspectiveProjection; };
+        rio::OrthoProjection& GetOrthoProjection() { return mOrthoProjection; };
+        EnvironmentInfo& GetEnvironmentInfo() { return mEnvInfo; };
+    public:
+        void SetEnvironmentInfo(EnvironmentInfo& environmentInfo) { mEnvInfo = environmentInfo; };
+        void SetPerspectiveProjection(rio::PerspectiveProjection& perspectiveProjection) { mPerspectiveProjection = perspectiveProjection; };
+        void SetOrthoProjection(rio::OrthoProjection& orthoProjection) { mOrthoProjection = orthoProjection; };
+    public:
+        // Sets uniforms for fragment shader. Shader must be binded before.
+        void SetEnvironmentShaderInfo(rio::Shader* shader, u32 sunColorFragLocation, u32 sunDirectionFragLocation);
+    public:
+        // Deletes node with provided ID, deletes child nodes too.
+        void DeleteNode(int ID);
 
-            mNodes.try_emplace(node->ID, node);
+        // Creates a new node
+        std::shared_ptr<Node> CreateNode(const char* name = "");
 
-            return node;
-        }
+        // Clears all nodes within a scene.
+        void ClearNodes() { mNodes.clear(); };
 
-        inline void Update()
-        {
-            rio::PrimitiveRenderer::instance()->setCamera(mCamera);
-            rio::PrimitiveRenderer::instance()->setProjection(mProjection);
-
-            for (const auto& node : mNodes)
-            {
-                for (const auto& property : node.second->mProperties)
-                {
-                    property->Update();
-                }
-            }
-        }
+    protected:
+        friend class Engine;
+        // Before all properties have received a Start() call
+        virtual void Start() {};
+        // After all properties have received a Start() call
+        virtual void LateStart() {};
+        // Before all properties have received a UpdateStep() call
+        virtual void UpdateStep() {};
+        // After all properties have received a UpdateStep() call
+        virtual void LateUpdateStep() {};
+        // Before all properties have received a Draw() call
+        virtual void DrawStep() {};
+        // After all properties have received a Draw() call
+        virtual void LateDrawStep() {};
+        // Called when scene is about to exit
+        virtual void Exit() {};
     private:
-        friend class SceneMgr;
-
         std::unordered_map<int, std::shared_ptr<Node>> mNodes;
-        std::string sceneName;
 
         rio::LookAtCamera mCamera;
-        rio::PerspectiveProjection mProjection;
+        rio::PerspectiveProjection mPerspectiveProjection;
+        rio::OrthoProjection mOrthoProjection;
 
-        std::string mLog;
+        EnvironmentInfo mEnvInfo;
     };
 }
