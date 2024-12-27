@@ -3,7 +3,7 @@
 
 namespace rioe
 {
-	SkeletalMesh::SkeletalMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indicies) : mMaterial(nullptr)
+	SkeletalMesh::SkeletalMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indicies)
 	{
 		mVertices = vertices;
 		mIndicies = indicies;
@@ -127,7 +127,7 @@ namespace rioe
 			Keyframe interpolatedKeyframe;
 
 			if (channel.interpolation == Step)
-				interpolatedKeyframe = LinearInterpolateKeyframes(startKeyframe, endKeyframe, time, startKeyframe.time, endKeyframe.time);
+				interpolatedKeyframe = StepInterpolateKeyframes(keyframes, time);
 			else
 				interpolatedKeyframe = LinearInterpolateKeyframes(startKeyframe, endKeyframe, time, startKeyframe.time, endKeyframe.time);
 		

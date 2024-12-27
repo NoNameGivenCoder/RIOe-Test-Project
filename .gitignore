@@ -377,3 +377,12 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
+
+sys/title
+
+FFLResHigh.dat
+FFLResMiddle.dat
+
+Build/
+wiiu_build/
+wiiu_config/*

@@ -16,7 +16,7 @@ namespace rioe
 	class Mesh
 	{
 	public:
-		Mesh(const std::vector<rio::mdl::res::Vertex>& vertices, const std::vector<unsigned int>& indicies);
+		Mesh(const std::vector<rio::mdl::res::Vertex>* vertices, const std::vector<unsigned int>* indicies);
 		~Mesh() { delete mMaterial; }
 
 		void Draw() const;

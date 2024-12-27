@@ -55,6 +55,8 @@ public:
     void Draw(const FFLDrawParam& draw_param);
     void SetMatrix(const rio::BaseMtx44f& matrix)
     {
+        // Initialize MV matrix to identity matrix.
+        mShader.setUniform(rio::Matrix44f::ident, mVertexUniformLocation[VERTEX_UNIFORM_VP], u32(-1));
         mShader.setUniform(matrix, mVertexUniformLocation[VERTEX_UNIFORM_M], u32(-1));
     }
 

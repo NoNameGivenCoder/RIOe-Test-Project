@@ -50,7 +50,7 @@ void RootTask::prepare_()
     //
     //rio::MemUtil::copy(&mProjMtx, &rioe::SceneMgr::instance()->GetCurrentScene()->GetPerspectiveProjection()->getMatrix(), sizeof(rio::Matrix44f));
     //
-    ////uniformSkeletalBlock = new rio::UniformBlock[mSkeleton->GetMeshes().size()];
+    //uniformSkeletalBlock = new rio::UniformBlock[mSkeleton->GetMeshes().size()];
     //skeletalBlockArray = new SkeletalBlock[mSkeleton->GetMeshes().size()];
     //
     //uniformSkeletalBoneBlock = new rio::UniformBlock[mSkeleton->GetMeshes().size()];
@@ -63,7 +63,7 @@ void RootTask::prepare_()
     //alignas(256) SkeletalBoneBlock skeletalBoneBlockArray[40];
     //alignas(256) rioe::Model::EnviromentBlock environmentBlockArray[40];
     //
-    ////for (int i = 0; i < mSkeleton->GetMeshes().size(); i++)
+    //for (int i = 0; i < mSkeleton->GetMeshes().size(); i++)
     //{
     //    const auto& mesh = mSkeleton->GetMeshes()[i];
     //    mesh->GetMaterial()->GetShader()->load("skinning_demo");

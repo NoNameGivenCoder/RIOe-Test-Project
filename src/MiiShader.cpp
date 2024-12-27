@@ -158,8 +158,8 @@ void MiiShader::Init()
     GX2InitFetchShaderEx(&mFetchShader, (u8*)buffer, FFL_ATTRIBUTE_BUFFER_TYPE_MAX, mAttribute, GX2_FETCH_SHADER_TESSELLATION_NONE, GX2_TESSELLATION_MODE_DISCRETE);
 #elif RIO_IS_WIN
     RIO_ASSERT(mVAOHandle == GL_NONE);
-    RIO_GL_CALL(glCreateBuffers(FFL_ATTRIBUTE_BUFFER_TYPE_MAX, mVBOHandle));
-    RIO_GL_CALL(glCreateVertexArrays(1, &mVAOHandle));
+    RIO_GL_CALL(glGenBuffers(FFL_ATTRIBUTE_BUFFER_TYPE_MAX, mVBOHandle));
+    RIO_GL_CALL(glGenVertexArrays(1, &mVAOHandle));
     RIO_ASSERT(mVAOHandle != GL_NONE);
 #endif
 

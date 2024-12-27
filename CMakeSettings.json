@@ -5,13 +5,12 @@
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64" ],
-      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "buildRoot": "${projectDir}\\Build\\Windows\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
-
     {
       "name": "GCC",
       "generator": "Ninja",
@@ -25,11 +24,13 @@
       "variables": [
         {
           "name": "CMAKE_C_COMPILER",
-          "value": "C:/msys64/usr/bin/gcc.exe"
+          "value": "C:/msys64/usr/bin/gcc.exe",
+          "type": "STRING"
         },
         {
           "name": "CMAKE_CXX_COMPILER",
-          "value": "C:/msys64/usr/bin/g++.exe"
+          "value": "C:/msys64/usr/bin/g++.exe",
+          "type": "STRING"
         }
       ]
     }

@@ -29,13 +29,13 @@ namespace rioe
         inline rio::Vector3f GetPosition() const { return mTranslation; };
         inline rio::Quatf GetRotation() const { return mRotation; };
 
-        inline rio::Matrix44f GetLocalMatrix() 
+        inline rio::Matrix44f& GetLocalMatrix() 
         {
             CalculateMatrix(rio::Matrix44f::ident);
 
             return mLocalTransformMatrix; 
         };
-        inline rio::Matrix44f GetWorldMatrix()
+        inline rio::Matrix44f& GetWorldMatrix()
         {
             rio::Matrix44f parentMatrix = rio::Matrix44f::ident;
 
@@ -109,6 +109,8 @@ namespace rioe
                 if (auto propertyFound = std::dynamic_pointer_cast<T>(property))
                     return propertyFound;
             }
+
+            return nullptr;
         }
 
     private:
@@ -118,7 +120,7 @@ namespace rioe
 
         rio::Vector3f mTranslation = { 0, 0, 0 };
         rio::Vector3f mScale = { 1, 1, 1 };
-        rio::Quatf mRotation = { 0, 0, 0, 0 };
+        rio::Quatf mRotation = { 1, 0, 0, 0 };
 
         std::vector<std::shared_ptr<IProperty>> mProperties;
         std::vector<std::shared_ptr<Node>> mChildren;
@@ -146,9 +148,7 @@ namespace rioe
             mWorldTransformMatrix.setMul(parentMatrix, mLocalTransformMatrix);
 
             for (const auto& child : mChildren)
-            {
                 child->CalculateMatrix(mWorldTransformMatrix);
-            } 
         };
 
         // If a node is the descendant of another node.

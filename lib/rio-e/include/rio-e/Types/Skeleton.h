@@ -98,6 +98,8 @@ namespace rioe
 	class Skeleton
 	{
 	public:
+		static constexpr int MAX_BONES = 30;
+	public:
 		std::vector<SkeletalMesh*>& GetMeshes() {
 			return mMeshes;
 		};
@@ -110,6 +112,15 @@ namespace rioe
 			return mInverseBindMatrices;
 		};
 
+		std::shared_ptr<rioe::Node> GetRootNode() {
+			return mRootNode;
+		};
+
+		std::unordered_map<int, std::shared_ptr<Node>> GetAnimationMap()
+		{
+			return mBoneAnimationMap;
+		}
+
 		void ApplyAnimation(std::string animationName, f32 time);
 	private:
 		friend class ModelLoader;
@@ -119,5 +130,7 @@ namespace rioe
 		std::vector<rio::Matrix44f> mInverseBindMatrices;
 
 		std::unordered_map<std::string, Animation> mAnimations;
+
+		std::shared_ptr<rioe::Node> mRootNode;
 	};
 }

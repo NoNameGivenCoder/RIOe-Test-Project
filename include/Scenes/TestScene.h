@@ -22,4 +22,7 @@ private:
 	FFLCharModelSource mFFLCharModelSource;
 
 	MiiShader* mMiiShader;
+
+	std::shared_ptr<rioe::Node> mHeadNode;
+	rioe::Skeleton* mSkeleton;
 };

@@ -4,6 +4,8 @@
 
 #include <math/rio_Vector.h>
 
+#include <rio-e/Common/Utils.h>
+
 class CharacterController : public rioe::IProperty
 {
 public:
@@ -22,18 +24,24 @@ public:
 
 		if (mIsGrounded)
 		{
+			if (mCharModel)
+				FFLSetExpression(mCharModel, FFL_EXPRESSION_NORMAL);
+
 			mVelocity.y = 0;
 		}
 		else
 		{
+			if (mCharModel)
+				FFLSetExpression(mCharModel, FFL_EXPRESSION_SURPRISE_OPEN_MOUTH);
+
 			mVelocity.y -= mGravity;
 		}
 
-		float dampingFactor = 0.9f;
+		float dampingFactor = 0.85f;
 		mVelocity.x *= dampingFactor;
 		mVelocity.z *= dampingFactor;
 
-		const float epsilon = 0.01f;
+		const float epsilon = 0.001f;
 		if (std::abs(mVelocity.x) < epsilon) mVelocity.x = 0.0f;
 		if (std::abs(mVelocity.z) < epsilon) mVelocity.z = 0.0f;
 		
@@ -43,28 +51,19 @@ public:
 		parentNode->SetPosition(parentPos + mVelocity);
 	};
 
+	void SetCharModel(FFLCharModel* charModel)
+	{
+		mCharModel = charModel;
+	}
+
 private:
 	void CameraMovementStep(rioe::Input::ControllerInputInfo& controller)
 	{
-		static float yaw = 0.0f;
-		static float pitch = 0.5f;
+		auto parentNodePos = GetParentNode().lock()->GetPosition();
 
-		yaw += controller.rStickDir.x * mCameraSensitivity;
-		pitch += controller.rStickDir.y * mCameraSensitivity;
+		rioe::GetEngine()->GetActiveScene()->GetCamera()->pos() = parentNodePos + mCameraOffset;
 
-		float maxPitch = rio::Mathf::deg2rad(89.0f);
-		pitch = std::clamp(pitch, -maxPitch, maxPitch);
-
-		auto parentNode = GetParentNode().lock();
-
-		float camX = parentNode->GetPosition().x + mCameraRadius * cos(pitch) * cos(yaw);
-		float camY = parentNode->GetPosition().y + mCameraRadius * sin(pitch);
-		float camZ = parentNode->GetPosition().z + mCameraRadius * cos(pitch) * sin(yaw);
-
-		auto camera = rioe::GetEngine()->GetActiveScene()->GetCamera();
-
-		camera->pos().set(camX, camY, camZ);
-		camera->at() = parentNode->GetPosition();
+		rioe::GetEngine()->GetActiveScene()->GetCamera()->at() = parentNodePos;
 	}
 
 	void MovementStep(rioe::Input::ControllerInputInfo& controller)
@@ -76,18 +75,7 @@ private:
 
 		auto camera = rioe::GetEngine()->GetActiveScene()->GetCamera();
 
-		rio::Vector3f cameraPos = camera->pos();
-		rio::Vector3f cameraAt = camera->at();
-		rio::Vector3f cameraUp = rio::Vector3f({ 0, 1, 0 });
-
-		rio::Vector3f cameraForward = cameraAt - cameraPos;
-		cameraForward.y = 0.0f;
-		cameraForward.normalize();
-
-		rio::Vector3f cameraRight = cameraForward.cross(cameraUp);
-		cameraRight.normalize();
-
-		rio::Vector3f movementDirection = cameraRight * lStick.x + cameraForward * lStick.y;
+		rio::Vector3f movementDirection = {lStick.x, 0.0f, -lStick.y};
 
 		movementDirection *= mCharacterSpeed;
 
@@ -98,18 +86,37 @@ private:
 		{
 			mVelocity.y += mCharacterJumpHeight;
 		}
+
+		if (movementDirection.length() > 0.0f) // Prevent rotating when there's no input
+		{
+			movementDirection.normalize();
+			
+			float yaw = std::atan2(movementDirection.x, movementDirection.z);
+
+			rio::Quatf targetRot = rioe::Utils::QuaternionFromEulerAngles(0.0f, yaw, 0.0f);
+			rio::Quatf currentRotation = parentNode->GetRotation();
+
+			rio::Quatf newRotation;
+
+			newRotation.setSlerp(currentRotation, targetRot, 0.1f);
+			newRotation.normalize();
+
+			parentNode->SetRotation(newRotation);
+		}
 	}
 private:
 	rioe::Input::ControllerIndex mControllerIdx = rioe::Input::CONTROLLER_0;
 
-	float mCameraRadius = 100.f;
+	rio::Vector3f mCameraOffset = { 0, 135, 100 };
 	float mCameraSensitivity = 0.05f;
-	float mCharacterSpeed = 1.f;
-	float mCharacterJumpHeight = 15.f;
+	float mCharacterSpeed = 0.5f;
+	float mCharacterJumpHeight = 5.f;
 
 	float mGravity = 0.4f;
 
 	bool mIsGrounded = false;
 
 	rio::Vector3f mVelocity = { 0, 0, 0 };
+
+	FFLCharModel* mCharModel = nullptr;
 };

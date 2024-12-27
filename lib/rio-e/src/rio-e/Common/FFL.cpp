@@ -4,17 +4,21 @@
 
 namespace rioe
 {
-	FFLInitDesc FFL::mInitDesc;
-	FFLResourceDesc FFL::mResourceDesc;
+    // Initialize FFLInitDesc.
+    FFLInitDesc FFL::mInitDesc = {
+        .fontRegion = FFL_FONT_REGION_JP_US_EU,
+        ._c = false,
+        ._10 = true
+    };
+    FFLResourceDesc FFL::mResourceDesc; // Will be zeroed out later.
     FFLMiddleDB FFL::mMiddleDB;
     void* FFL::mMiiBuffer;
     std::vector<FFLStoreData*> FFL::mManagedStoreData;
 
 	void FFL::InitializeFFL()
 	{
-        mInitDesc.fontRegion = FFL_FONT_REGION_JP_US_EU;
-        mInitDesc._c = false;
-        mInitDesc._10 = true;
+        // Initialize mResourceDesc with zeroes.
+        rio::MemUtil::set(&mResourceDesc, 0, sizeof(FFLResourceDesc));
 
 #if RIO_IS_CAFE
         FSInit();
@@ -43,6 +47,7 @@ namespace rioe
                     mResourceDesc.size[FFL_RESOURCE_TYPE_MIDDLE] = arg.read_size;
                 }
             }
+            
             // High
             {
                 FFLGetResourcePath(resPath.data(), 256, FFL_RESOURCE_TYPE_HIGH, false);
@@ -78,7 +83,8 @@ namespace rioe
             return;
         }
 
-        FFLiEnableSpecialMii(333326543);
+        //FFLiEnableSpecialMii(333326543); // TODO: if you see this after i committed to ffl
+                                           //       after 2024-12-21 you can uncomment it
         RIO_ASSERT(FFLIsAvailable());
 
         FFLInitResGPUStep();

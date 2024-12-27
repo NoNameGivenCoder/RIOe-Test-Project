@@ -1,6 +1,8 @@
 #define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_NO_INCLUDE_STB_IMAGE
+#define TINYGLTF_NO_STB_IMAGE_WRITE
 #define TINYGLTF_NO_STB_IMAGE
+
 #include "tiny_gltf.h"
 
 #include "rio-e/Systems/ModelLoader.h"
@@ -16,20 +18,18 @@
 
 #include "rio-e/Properties/DebugDisplayProperty.hpp"
 #include "rio-e/Properties/MeshDisplayProperty.hpp"
+#include "rio-e/Properties/SkeletonDisplayProperty.hpp"
 
 #include "rio-e/Engine.hpp"
 
 #include <functional>
 
+//#include "ktx.h"
+
 namespace rioe
 {
 	std::unordered_map<std::string, Model*> ModelLoader::mModelCache;
     std::unordered_map<std::string, Skeleton*> ModelLoader::mSkeletonCache;
-
-	bool ModelLoader::CustomLoadImageData(tinygltf::Image* image, const int image_idx, std::string* err, std::string* warn, int req_width, int req_height, const unsigned char* bytes, int size, void* user_data)
-	{
-		return true;
-	}
 
 	void ModelLoader::Cleanup()
 	{
@@ -79,6 +79,11 @@ namespace rioe
         return reinterpret_cast<const T*>(bufferData);
     }
 
+    bool ModelLoader::CustomLoadImageData(tinygltf::Image* image, const int image_idx, std::string* err, std::string* warn, int req_width, int req_height, const unsigned char* bytes, int size, void* user_data)
+    {
+        return true;
+    }
+
     bool ModelLoader::LoadGLB(std::string filename, tinygltf::Model* model, std::string* warn, std::string* err)
     {
         tinygltf::TinyGLTF loader;
@@ -123,41 +128,181 @@ namespace rioe
 		return { wrapModeS, wrapModeT };
     }
 
+    u32 StbiCompToRioComp(int stbiCompMap) {
+        switch (stbiCompMap) {
+        case 1: // Grayscale
+            return (0 << 24) | (4 << 16) | (4 << 8) | (5 << 0); // {R, 0, 0, 1}
+        case 2: // Grayscale + Alpha
+            return (0 << 24) | (4 << 16) | (4 << 8) | (3 << 0); // {R, 0, 0, A}
+        case 3: // RGB
+            return (0 << 24) | (1 << 16) | (2 << 8) | (5 << 0); // {R, G, B, 1}
+        case 4: // RGBA
+            return (0 << 24) | (1 << 16) | (2 << 8) | (3 << 0); // {R, G, B, A}
+        default:
+            return 0;
+        }
+    }
+
+    rio::Texture2D* CreateTexture(u8* ktxFileBuffer, size_t ktxFileSize)
+    {
+        //ktxTexture* texture;
+        //KTX_error_code result;
+        //ktx_uint8_t* image;
+        //ktx_uint32_t level, layer, faceSlice;
+        //
+        //result = ktxTexture_CreateFromMemory(ktxFileBuffer, ktxFileSize, KTX_TEXTURE_CREATE_LOAD_IMAGE_DATA_BIT, &texture);
+        //
+        //u32 width = texture->baseWidth;
+        //u32 height = texture->baseHeight;
+        //
+        //ktx_size_t imageOffset;
+        //ktxTexture_GetImageOffset(texture, 0, 0, 1, &imageOffset);
+        //
+        //void* imageData = ktxTexture_GetData(texture) + imageOffset;
+        //size_t imageSize = ktxTexture_GetImageSize(texture, 1);
+        //
+        //std::vector<void*> mipmaps(texture->numLevels);
+        //mipmaps[0] = imageData; // First mipmap level
+        //
+        //for (level = 1; level < texture->numLevels; ++level) {
+       //    ktxTexture_GetImageOffset(texture, 0, 0, level + 1, &imageOffset);
+       //    imageData = ktxTexture_GetData(texture) + imageOffset;
+       //    mipmaps[level] = imageData;
+       //}
+
+#if RIO_IS_WIN
+        //rio::NativeTexture2D nativeTexture = {
+        //    .surface = {
+        //        .width = width,
+        //        .height = height,
+        //        .mipLevels = (u32)0,
+        //        .format = rio::TEXTURE_FORMAT_R8_G8_B8_A8_UNORM,
+        //        .imageSize = (u32)imageSize,
+        //        .mipmapSize = 0,
+        //        //.mipLevelOffset = ,
+        //        .image = imageData,
+        //        //.mipmaps = mipmaps.data(),
+		//	},
+        //    //.compMap = StbiCompToRioComp(componentCount),
+		//	._footer = {
+		//		.magic = 0x5101382D,
+		//		.version = 0x01000000
+		//	}
+        //};
+        
+        //rio::TextureFormatUtil::getNativeTextureFormat(nativeTexture.surface.nativeFormat, rio::TEXTURE_FORMAT_R8_G8_B8_A8_UNORM);
+#else //
+        //GX2Surface surface = {};
+        //surface.dim = GX2_SURFACE_DIM_TEXTURE_2D;
+        //surface.width = imageWidth;
+        //surface.height = imageHeight;
+        //surface.depth = 1;
+        //surface.mipLevels = 1;
+        //surface.format = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8;
+        //surface.aa = GX2_AA_MODE1X;
+        //surface.tileMode = GX2_TILE_MODE_LINEAR_SPECIAL;
+        //
+        //GX2CalcSurfaceSizeAndAlignment(&surface);
+        //
+        //rio::NativeTexture2D texture = {
+        //    .surface = {
+        //        .dim = surface.dim,
+        //        .width = surface.width,
+        //        .height = surface.height,
+        //        .depth = surface.depth,
+        //        .mipLevels = surface.mipLevels,
+        //        .format = surface.format,
+        //        .aa = surface.aa,
+        //        .imageSize = (u32)surface.imageSize,
+        //        .image = (void*)image.image.data(),
+        //        .mipmaps = nullptr,
+        //        .tileMode = surface.tileMode,
+        //        .swizzle = surface.swizzle,
+        //        .alignment = surface.alignment,
+        //        .pitch = surface.pitch,
+        //    },
+        //    .compMap = StbiCompToRioComp(componentCount),
+        //};
+        //
+		//GX2InitTextureRegs(&texture);
+#endif
+//
+//        auto newTexture = new rio::Texture2D(texture);
+//
+//#if RIO_IS_WIN
+//        glBindTexture(GL_TEXTURE_2D, newTexture->getNativeTextureHandle());
+//        glGenerateMipmap(GL_TEXTURE_2D);
+//#endif // RIO_IS_WIN
+//
+        return nullptr;
+    }
+
     Material* ModelLoader::CreateMaterial(const tinygltf::Model& model, const tinygltf::Primitive& primitive)
     {
         auto& tinyMaterial = model.materials[primitive.material];
-        auto& texture = model.textures[tinyMaterial.pbrMetallicRoughness.baseColorTexture.index];
-        auto& image = model.images[texture.source];
 
         auto material = new Material();
-
-        material->mName = tinyMaterial.name;
-        material->SetTexture(new rio::Texture2D(image.name.c_str()), rioe::Material::TEXTURE_TYPE_ALBEDO);
-        material->GetTextureSampler(rioe::Material::TEXTURE_TYPE_ALBEDO)->linkTexture2D(material->GetTexture(rioe::Material::TEXTURE_TYPE_ALBEDO));
         
-		auto wrapMode = GetWrapMode(model.samplers[texture.sampler]);
+        material->SetName(tinyMaterial.name);
 
-        material->GetTextureSampler(rioe::Material::TEXTURE_TYPE_ALBEDO)->setWrap(wrapMode.first, wrapMode.second, rio::TEX_WRAP_MODE_REPEAT);
+        if (tinyMaterial.pbrMetallicRoughness.baseColorTexture.index != -1)
+        {
+            auto& albedoTexture = model.textures[tinyMaterial.pbrMetallicRoughness.baseColorTexture.index];
+            auto& albedoImage = model.images[albedoTexture.source];
+            auto wrapMode = GetWrapMode(model.samplers[albedoTexture.sampler]);
+
+            material->SetTexture(new rio::Texture2D(albedoImage.name.c_str()), rioe::Material::TEXTURE_TYPE_ALBEDO);
+            material->GetTextureSampler(rioe::Material::TEXTURE_TYPE_ALBEDO)->setWrap(wrapMode.first, wrapMode.second, rio::TEX_WRAP_MODE_REPEAT);
+        }
+
+        if (tinyMaterial.normalTexture.index != -1)
+        {
+            auto& normalTexture = model.textures[tinyMaterial.normalTexture.index];
+            auto& normalImage = model.images[normalTexture.source];
+            auto wrapMode = GetWrapMode(model.samplers[normalTexture.sampler]);
+
+            material->SetTexture(new rio::Texture2D(normalImage.name.c_str()), rioe::Material::TEXTURE_TYPE_NORMAL);
+            material->GetTextureSampler(rioe::Material::TEXTURE_TYPE_NORMAL)->setWrap(wrapMode.first, wrapMode.second, rio::TEX_WRAP_MODE_REPEAT);
+        }
+
+        auto renderState = material->GetRenderState();
 
         if (tinyMaterial.doubleSided)
-            material->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_NONE);
+            renderState->setCullingMode(rio::Graphics::CULLING_MODE_NONE);
 
         if (tinyMaterial.alphaMode == "OPAQUE")
-            material->mRenderState.setDepthEnable(true, true);
+            renderState->setDepthEnable(true, true);
         else if (tinyMaterial.alphaMode == "MASK")
-            material->mRenderState.setDepthEnable(true, false);
+            renderState->setDepthEnable(true, false);
         else if (tinyMaterial.alphaMode == "BLEND")
         {
-            material->mRenderState.setBlendEnable(true);
-            material->mRenderState.setBlendConstantColor({ 1.0f, 1.0f, 1.0f, (f32)tinyMaterial.alphaCutoff });
+            renderState->setBlendEnable(true);
+            renderState->setBlendConstantColor({ 1.0f, 1.0f, 1.0f, (f32)tinyMaterial.alphaCutoff });
         }
 
         if (tinyMaterial.doubleSided)
-			material->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_NONE);
+            renderState->setCullingMode(rio::Graphics::CULLING_MODE_NONE);
         else
-			material->mRenderState.setCullingMode(rio::Graphics::CULLING_MODE_BACK);
+            renderState->setCullingMode(rio::Graphics::CULLING_MODE_BACK);
 
         return material;
+    }
+
+    std::shared_ptr<Node> CreateNode(const tinygltf::Node& node)
+    {
+        auto newNode = rioe::GetEngine()->GetActiveScene()->CreateNode();
+        newNode->name = node.name;
+
+        if (node.translation.size() == 3)
+            newNode->SetPosition({ static_cast<f32>(node.translation[0]), static_cast<f32>(node.translation[1]), static_cast<f32>(node.translation[2]) });
+
+        if (node.scale.size() == 3)
+            newNode->SetScale({ static_cast<f32>(node.scale[0]), static_cast<f32>(node.scale[1]), static_cast<f32>(node.scale[2]) });
+
+        if (node.rotation.size() == 4)
+            newNode->SetRotation({ static_cast<f32>(node.rotation[0]), static_cast<f32>(node.rotation[1]), static_cast<f32>(node.rotation[2]), static_cast<f32>(node.rotation[3]) });
+
+		return newNode;
     }
 
     Model* ModelLoader::LoadModel(const std::string& filename, const char* rootNodeName)
@@ -185,26 +330,16 @@ namespace rioe
         for (size_t i = 0; i < model.nodes.size(); ++i)
         {
             const auto& tinyNode = model.nodes[i];
-            auto newNode = rioe::GetEngine()->GetActiveScene()->CreateNode();
-            newNode->name = tinyNode.name;
+			auto newNode = CreateNode(tinyNode);
+
             nodeMap[i] = newNode;
-        
             rootNode->AddChild(newNode);
-            
-            if (tinyNode.translation.size() == 3)
-                newNode->SetPosition({ static_cast<f32>(tinyNode.translation[0]), static_cast<f32>(tinyNode.translation[1]), static_cast<f32>(tinyNode.translation[2]) });
-        
-            if (tinyNode.scale.size() == 3)
-                newNode->SetScale({ static_cast<f32>(tinyNode.scale[0]), static_cast<f32>(tinyNode.scale[1]), static_cast<f32>(tinyNode.scale[2]) });
-        
-            if (tinyNode.rotation.size() == 4)
-                newNode->SetRotation({ static_cast<f32>(tinyNode.rotation[0]), static_cast<f32>(tinyNode.rotation[1]), static_cast<f32>(tinyNode.rotation[2]), static_cast<f32>(tinyNode.rotation[3]) });
-        
-            if (tinyNode.mesh == -1)
-                continue;
         
             auto& tinyMesh = model.meshes[tinyNode.mesh];
         
+			if (tinyMesh.primitives.size() == 0)
+				continue;
+
             newNode->AddProperty(std::make_shared<rioe::properties::MeshDisplayProperty>());
             auto property = newNode->GetProperty<rioe::properties::MeshDisplayProperty>();
         
@@ -247,7 +382,7 @@ namespace rioe
                         vertex.tex_coord = { rioe::Endian::SwapEndianness(vertex.tex_coord.x), rioe::Endian::SwapEndianness(vertex.tex_coord.y) };
                     }
                     
-                    vertices.emplace_back(vertex);
+                    vertices.push_back(vertex);
                 }
         
                 for (size_t i = 0; i < indexAccessor.count; i++)
@@ -260,14 +395,14 @@ namespace rioe
                     indicesData.push_back(index);
                 }
         
-                auto mesh = new Mesh(vertices, indicesData);
+                auto mesh = new Mesh(&vertices, &indicesData);
         
                 // Material Data
                 if (primitive.material >= 0 && primitive.material < model.materials.size())
                     mesh->mMaterial = CreateMaterial(model, primitive);
         
-                property->mMeshes.emplace_back(mesh);
-                newModel->mMeshes.emplace_back(mesh);
+                property->mMeshes.push_back(mesh);
+                newModel->mMeshes.push_back(mesh);
             }
         
             property->Initialize();
@@ -308,6 +443,10 @@ namespace rioe
        auto newSkeleton = new Skeleton();
        bool bigEndian = rioe::Endian::BigEndian();
 	   auto rootNode = rioe::GetEngine()->GetActiveScene()->CreateNode(rootNodeName);
+
+	   newSkeleton->mRootNode = rootNode;
+	   rootNode->AddProperty(std::make_shared<rioe::properties::SkeletonDisplayProperty>());
+	   auto property = rootNode->GetProperty<rioe::properties::SkeletonDisplayProperty>();
        
        for (const auto& mesh : model.meshes)
        {
@@ -437,18 +576,7 @@ namespace rioe
            for (size_t i = 0; i < skin.joints.size(); i++)
            {
                const auto& gltfNode = model.nodes[skin.joints[i]];
-               auto newNode = rioe::GetEngine()->GetActiveScene()->CreateNode();
-       
-               newNode->name = gltfNode.name;
-       
-               if (!gltfNode.translation.empty())
-                   newNode->SetPosition({ static_cast<f32>(gltfNode.translation[0]), static_cast<f32>(gltfNode.translation[1]), static_cast<f32>(gltfNode.translation[2]) });
-                   
-               if (!gltfNode.scale.empty())
-                   newNode->SetScale({ static_cast<f32>(gltfNode.scale[0]), static_cast<f32>(gltfNode.scale[1]), static_cast<f32>(gltfNode.scale[2]) });
-       
-               if (!gltfNode.rotation.empty())
-                   newNode->SetRotation({ static_cast<f32>(gltfNode.rotation[0]), static_cast<f32>(gltfNode.rotation[1]), static_cast<f32>(gltfNode.rotation[2]), static_cast<f32>(gltfNode.rotation[3]) });
+			   auto newNode = CreateNode(gltfNode);
        
                newSkeleton->mBones[i] = newNode;
                newSkeleton->mBoneAnimationMap[skin.joints[i]] = newNode;
@@ -550,6 +678,9 @@ namespace rioe
        }
        
        mSkeletonCache.emplace(filename, newSkeleton);
+
+       property->SetSkeleton(newSkeleton);
+       property->Initialize();
        
        RIO_LOG("[ModelLoader] Loaded %s.\n", filename.c_str());
        

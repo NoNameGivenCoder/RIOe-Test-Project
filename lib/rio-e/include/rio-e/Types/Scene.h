@@ -14,6 +14,8 @@ namespace rio { class Shader; }
 
 namespace rioe
 {
+    class Material;
+
     struct EnvironmentInfo
     {
         rio::Vector3f SunDirection = { 0, 0, 0 };
@@ -30,6 +32,8 @@ namespace rioe
             mOrthoProjection.set(-1.0f, 1.0f, 720.0f, 0.0f, 0.0f, 1280.0f);
             mPerspectiveProjection.set(1.f, 10000.0f, rio::Mathf::deg2rad(90.0f), static_cast<f32>(1280) / 720);
         };
+
+		~IScene() { ClearNodes(); };
     public:
         std::shared_ptr<Node> GetNodeByID(int ID) { return mNodes.at(ID); };
         std::unordered_map<int, std::shared_ptr<Node>>* GetAllNodes() { return &mNodes; };
@@ -45,7 +49,7 @@ namespace rioe
         void SetOrthoProjection(rio::OrthoProjection& orthoProjection) { mOrthoProjection = orthoProjection; };
     public:
         // Sets uniforms for fragment shader. Shader must be binded before.
-        void SetEnvironmentShaderInfo(rio::Shader* shader, u32 sunColorFragLocation, u32 sunDirectionFragLocation);
+        void SetEnvironmentMaterialInfo(rioe::Material* material);
     public:
         // Deletes node with provided ID, deletes child nodes too.
         void DeleteNode(int ID);
@@ -54,7 +58,10 @@ namespace rioe
         std::shared_ptr<Node> CreateNode(const char* name = "");
 
         // Clears all nodes within a scene.
-        void ClearNodes() { mNodes.clear(); };
+        void ClearNodes() 
+        {
+            mNodes.clear();
+        };
 
     protected:
         friend class Engine;

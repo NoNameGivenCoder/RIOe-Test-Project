@@ -4,10 +4,10 @@
 namespace rioe
 {
 	// Majority of this was copied over from rio::mdl::Mesh but changed to remove the res mesh.
-	Mesh::Mesh(const std::vector<rio::mdl::res::Vertex>& vertices, const std::vector<unsigned int>& indicies) : mMaterial(nullptr)
+	Mesh::Mesh(const std::vector<rio::mdl::res::Vertex>* vertices, const std::vector<unsigned int>* indicies) : mMaterial(nullptr)
 	{
-		mVertices = vertices;
-		mIndicies = indicies;
+		mVertices = *vertices;
+		mIndicies = *indicies;
 
 		mIdxBuf = mIndicies.data();
 		mIdxNum = mIndicies.size();
