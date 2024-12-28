@@ -52,10 +52,10 @@ else()
     add_compile_definitions(WINDOW_NAME="${WINDOW_NAME}")
 
     set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "Disable Zlib Examples" FORCE)
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/lib/zlib-1.3.1")
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/lib/zlib")
 
     set(ZLIB_LIBRARY "zlibstatic")
-    set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/zlib-1.3.1")
+    set(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/zlib")
 endif()
 
 file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
