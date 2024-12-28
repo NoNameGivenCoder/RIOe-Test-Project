@@ -3,7 +3,7 @@
 	url = https://github.com/syoyo/tinygltf
 [submodule "lib/rio"]
 	path = lib/rio
-	url = https://github.com/ariankordi/rio
+	url = https://github.com/NoNameGivenCoder/rio
 [submodule "lib/ffl"]
 	path = lib/ffl
 	url = https://github.com/ariankordi/ffl
